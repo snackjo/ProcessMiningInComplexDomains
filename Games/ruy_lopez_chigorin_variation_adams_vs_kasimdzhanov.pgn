@@ -1,0 +1,31 @@
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "Michael Adams"]
+[Black "Rustam Kasimdzhanov"]
+[Result "1-0"]
+[WhiteElo "2731"]
+[BlackElo "2652"]
+[Link "https://www.chess.com/analysis?tab=analysis"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3
+O-O 9. h3 Na5 10. Bc2 c5 11. d4 Qc7 12. d5 Nc4 13. b3 Nb6 14. a4 Bd7 15. a5 Nc8
+16. c4 {white change of plans.} 16... b4 {but black want the same game.} 17.
+Nbd2 g6 18. Nf1 Nh5 19. Bh6 Re8 20. Qd2 Bf8 21. g4 {now white is ahead in time
+and want control f5-f6 square.} 21... Ng7 22. N3h2 Qd8 {trying to cover this
+weak squares (f6-g5)} 23. f4 exf4 24. Qxf4 Qe7 $2 {a mistake, black try to make a
+counterplay in e5 but block the f8 bishop and the queen is in dangerous.} 25.
+Nf3 {threat Bg5 winning a pawn.} (25. Bg5 {more strong is this.} 25... Qe5 26.
+Qxe5 Rxe5 27. Nf3 Re8 28. e5 dxe5 29. Nxe5 Ra7 30. Nd2 {controlling the
+center.}) 25... f6 {the only defense.} 26. Ng3 {now is the time for rook
+action.} 26... Rd8 {black don't know what to do so want Ne8 and exchange
+pieces.} 27. Rf1 Ne8 28. Bxf8 Qxf8 {of course Kxf8 is a free pin.} 29. e5 {but
+now white control the center.} 29... dxe5 30. Nxe5 Ncd6 {black need more
+defenders.} 31. Rae1 {and white more attackers.} 31... Qg7 {getting out of pin.}
+32. Nd3 Rac8 33. Qf2 f5 {the last chance of black, try to release his position
+with the cost of the weakness in e5-e6.} 34. Ne5 Nf6 (34... fxg4 35. hxg4 {to
+dangerous, white have all his pieces active.}) 35. Nxd7 Rxd7 36. gxf5 {winning a
+sane pawn.} 36... g5 37. Re6 Kh8 38. Bd1 {blocking g4} 38... g4 39. hxg4 Rg8 40.
+Qf4 Nxg4 41. Bxg4 Qxg4 42. Qxg4 Rxg4 43. Kh2 h5 44. Kh3 Rd4 45. f6 Nf7 46. Rf5
+{white win another pawn, have a passed pawn and threat Nf6.} 1-0
