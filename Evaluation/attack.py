@@ -1,63 +1,40 @@
-from Evaluation.global_functions import board, all_squares
-
-
-def pinned_direction(pos, square=None):
-    if square is None:
-        return sum(pinned_direction(pos, sq) for sq in all_squares(pos))
-
-    if "PNBRQK".find(board(pos, square.x, square.y).upper()) < 0:
-        return 0
-
-    color = 1 if "PNBRQK".find(board(pos, square.x, square.y)) >= 0 else -1
-
-    for i in range(8):
-        ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
-        king = False
-        for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
-            if b == "K":
-                king = True
-            if b != "-":
-                break
-        if king:
-            for d in range(1, 8):
-                b = board(pos, square.x - d * ix, square.y - d * iy)
-                if b == "q" or (b == "b" and ix * iy != 0) or (b == "r" and ix * iy == 0):
-                    return abs(ix + iy * 3) * color
-                if b != "-":
-                    break
-    return 0
+from Evaluation.global_functions import board, pinned_direction, sum_function
 
 
 def knight_attack(pos, square=None, s2=None):
     if square is None:
-        return sum(knight_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, knight_attack)
 
     v = 0
-    for i in range(8):
-        ix = ((i > 3) + 1) * (((i % 4) > 1) * 2 - 1)
-        iy = (2 - (i > 3)) * ((i % 2 == 0) * 2 - 1)
-        b = board(pos, square.x + ix, square.y + iy)
-        if b == "N" and (s2 is None or (s2.x == square.x + ix and s2.y == square.y + iy)) and not pinned(pos, {
-            'x': square.x + ix, 'y': square.y + iy}):
+    knight_moves = [
+        (-2, -1), (-2, 1), (2, -1), (2, 1),
+        (-1, -2), (-1, 2), (1, -2), (1, 2)
+    ]
+
+    for move in knight_moves:
+        dx, dy = move
+        b = board(pos, square['y'] + dy, square['x'] + dx)
+        if b == "N" and (s2 is None or (s2['y'] == square['y'] + dy and s2['x'] == square['x'] + dx)) and not pinned(
+                pos, {
+                    'y': square['y'] + dy, 'x': square['x'] + dx}):
             v += 1
     return v
 
 
 def bishop_xray_attack(pos, square=None, s2=None):
     if square is None:
-        return sum(bishop_xray_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, bishop_xray_attack)
 
     v = 0
-    for i in range(4):
-        ix = (i > 1) * 2 - 1
-        iy = (i % 2 == 0) * 2 - 1
+    diagonal_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+    for direction in diagonal_directions:
+        dx, dy = direction
         for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
-            if b == "B" and (s2 is None or (s2.x == square.x + d * ix and s2.y == square.y + d * iy)):
-                dir = pinned_direction(pos, {'x': square.x + d * ix, 'y': square.y + d * iy})
-                if dir == 0 or abs(ix + iy * 3) == dir:
+            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
+            if b == "B" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
+                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
+                if dir == 0 or abs(dx + dy * 3) == dir:
                     v += 1
             if b != "-" and b != "Q" and b != "q":
                 break
@@ -66,17 +43,18 @@ def bishop_xray_attack(pos, square=None, s2=None):
 
 def rook_xray_attack(pos, square=None, s2=None):
     if square is None:
-        return sum(rook_xray_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, rook_xray_attack)
 
     v = 0
-    for i in range(4):
-        ix = -1 if i == 0 else 1 if i == 1 else 0
-        iy = -1 if i == 2 else 1 if i == 3 else 0
+    straight_directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+    for direction in straight_directions:
+        dx, dy = direction
         for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
-            if b == "R" and (s2 is None or (s2.x == square.x + d * ix and s2.y == square.y + d * iy)):
-                dir = pinned_direction(pos, {'x': square.x + d * ix, 'y': square.y + d * iy})
-                if dir == 0 or abs(ix + iy * 3) == dir:
+            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
+            if b == "R" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
+                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
+                if dir == 0 or abs(dx + dy * 3) == dir:
                     v += 1
             if b != "-" and b != "R" and b != "Q" and b != "q":
                 break
@@ -85,50 +63,56 @@ def rook_xray_attack(pos, square=None, s2=None):
 
 def queen_attack(pos, square=None, s2=None):
     if square is None:
-        return sum(queen_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, queen_attack)
 
     v = 0
-    for i in range(8):
-        ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
+    all_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1), (0, 1), (1, 0), (0, -1), (-1, 0)]
+
+    for direction in all_directions:
+        dx, dy = direction
         for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
-            if b == "Q" and (s2 is None or (s2.x == square.x + d * ix and s2.y == square.y + d * iy)):
-                dir = pinned_direction(pos, {'x': square.x + d * ix, 'y': square.y + d * iy})
-                if dir == 0 or abs(ix + iy * 3) == dir:
+            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
+            if b == "Q" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
+                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
+                if dir == 0 or abs(dx + dy * 3) == dir:
                     v += 1
             if b != "-":
                 break
     return v
 
 
-def pawn_attack(pos, square=None):
+def pawn_attack(pos, square=None, param=None):
     if square is None:
-        return sum(pawn_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, pawn_attack)
 
     v = 0
-    if board(pos, square.x - 1, square.y + 1) == "P":
+    if board(pos, square['y'] + 1, square['x'] - 1) == "P":
         v += 1
-    if board(pos, square.x + 1, square.y + 1) == "P":
+    if board(pos, square['y'] + 1, square['x'] + 1) == "P":
         v += 1
     return v
 
 
-def king_attack(pos, square=None):
+def king_attack(pos, square=None, param=None):
     if square is None:
-        return sum(king_attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, king_attack)
 
-    for i in range(8):
-        ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
-        if board(pos, square.x + ix, square.y + iy) == "K":
+    king_moves = [
+        (-1, -1), (-1, 0), (-1, 1),
+        (0, -1), (0, 1),
+        (1, -1), (1, 0), (1, 1)
+    ]
+
+    for move in king_moves:
+        dx, dy = move
+        if board(pos, square['y'] + dy, square['x'] + dx) == "K":
             return 1
     return 0
 
 
-def attack(pos, square=None):
+def attack(pos, square=None, param=None):
     if square is None:
-        return sum(attack(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, attack)
 
     v = 0
     v += pawn_attack(pos, square)
@@ -142,29 +126,28 @@ def attack(pos, square=None):
 
 def queen_attack_diagonal(pos, square=None, s2=None):
     if square is None:
-        return sum(queen_attack_diagonal(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, queen_attack_diagonal)
 
     v = 0
-    for i in range(8):
-        ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
-        if ix == 0 or iy == 0:
-            continue
+    diagonal_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+    for direction in diagonal_directions:
+        dx, dy = direction
         for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
-            if b == "Q" and (s2 is None or (s2.x == square.x + d * ix and s2.y == square.y + d * iy)):
-                dir = pinned_direction(pos, {'x': square.x + d * ix, 'y': square.y + d * iy})
-                if dir == 0 or abs(ix + iy * 3) == dir:
+            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
+            if b == "Q" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
+                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
+                if dir == 0 or abs(dx + dy * 3) == dir:
                     v += 1
             if b != "-":
                 break
     return v
 
 
-def pinned(pos, square=None):
+def pinned(pos, square=None, param=None):
     if square is None:
-        return sum(pinned(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, pinned)
 
-    if "PNBRQK".find(board(pos, square.x, square.y)) < 0:
+    if "PNBRQK".find(board(pos, square['y'], square['x'])) < 0:
         return 0
     return 1 if pinned_direction(pos, square) > 0 else 0

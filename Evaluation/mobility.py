@@ -1,15 +1,14 @@
 from Evaluation.attack import knight_attack, bishop_xray_attack, rook_xray_attack, queen_attack
-from Evaluation.global_functions import board, all_squares, colorflip
-from Evaluation.helpers import rank
+from Evaluation.global_functions import board, colorflip, rank, sum_function
 from Evaluation.king import blockers_for_king
 
 
-def mobility(pos, square=None):
+def mobility(pos, square=None, param=None):
     if square is None:
-        return sum(mobility(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, mobility)
 
     v = 0
-    b = board(pos, square.x, square.y)
+    b = board(pos, square['x'], square['y'])
 
     if "NBRQ".find(b) < 0:
         return 0
@@ -31,22 +30,22 @@ def mobility(pos, square=None):
     return v
 
 
-def mobility_area(pos, square=None):
+def mobility_area(pos, square=None, param=None):
     if square is None:
-        return sum(mobility_area(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, mobility_area)
 
-    if board(pos, square.x, square.y) == "K":
+    if board(pos, square['x'], square['y']) == "K":
         return 0
-    if board(pos, square.x, square.y) == "Q":
+    if board(pos, square['x'], square['y']) == "Q":
         return 0
-    if board(pos, square.x - 1, square.y - 1) == "p":
+    if board(pos, square['x'] - 1, square['y'] - 1) == "p":
         return 0
-    if board(pos, square.x + 1, square.y - 1) == "p":
+    if board(pos, square['x'] + 1, square['y'] - 1) == "p":
         return 0
-    if (board(pos, square.x, square.y) == "P" and
-            (rank(pos, square) < 4 or board(pos, square.x, square.y - 1) != "-")):
+    if (board(pos, square['x'], square['y']) == "P" and
+            (rank(pos, square) < 4 or board(pos, square['x'], square['y'] - 1) != "-")):
         return 0
-    if blockers_for_king(colorflip(pos), {'x': square.x, 'y': 7 - square.y}):
+    if blockers_for_king(colorflip(pos), {'x': square['x'], 'y': 7 - square['y']}):
         return 0
 
     return 1
@@ -54,7 +53,7 @@ def mobility_area(pos, square=None):
 
 def mobility_bonus(pos, square=None, mg=True):
     if square is None:
-        return sum(mobility_bonus(pos, sq, mg) for sq in all_squares(pos))
+        return sum_function(pos, mobility_bonus)
 
     bonus = [
         [-62, -53, -12, -4, 3, 13, 22, 28, 33],
@@ -70,20 +69,20 @@ def mobility_bonus(pos, square=None, mg=True):
          182, 182, 192, 219]
     ]
 
-    i = "NBRQ".find(board(pos, square.x, square.y))
+    i = "NBRQ".find(board(pos, square['x'], square['y']))
     if i < 0:
         return 0
 
     return bonus[i][mobility(pos, square)]
 
 
-def mobility_mg(pos, square=None):
+def mobility_mg(pos, square=None, param=None):
     if square is None:
-        return sum(mobility_mg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, mobility_mg)
     return mobility_bonus(pos, square, True)
 
 
-def mobility_eg(pos, square=None):
+def mobility_eg(pos, square=None, param=None):
     if square is None:
-        return sum(mobility_eg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, mobility_eg)
     return mobility_bonus(pos, square, False)

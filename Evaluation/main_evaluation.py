@@ -1,29 +1,27 @@
-from Evaluation.global_functions import *
-from Evaluation.helpers import *
-from Evaluation.imbalance import *
-from Evaluation.king import *
-from Evaluation.material import *
-from Evaluation.mobility import *
-from Evaluation.passed_pawns import *
-from Evaluation.pawns import *
-from Evaluation.pieces import *
-from Evaluation.space import *
-from Evaluation.threats import *
-from Evaluation.winnable import *
-
 """
 https://hxim.github.io/Stockfish-Evaluation-Guide/
 """
+from Evaluation.global_functions import colorflip, board
+from Evaluation.helpers import pawn_count, queen_count, bishop_count, knight_count, opposite_bishops, piece_count
+from Evaluation.imbalance import imbalance_total
+from Evaluation.king import king_mg, king_eg
+from Evaluation.material import piece_value_mg, psqt_mg, piece_value_eg, psqt_eg, non_pawn_material
+from Evaluation.mobility import mobility_mg, mobility_eg
+from Evaluation.passed_pawns import passed_mg, passed_eg, candidate_passed
+from Evaluation.pawns import pawns_mg, pawns_eg
+from Evaluation.pieces import pieces_mg, pieces_eg
+from Evaluation.space import space
+from Evaluation.threats import threats_mg, threats_eg
 
 
-def main_evaluation(pos, *args):
-    mg = middle_game_evaluation(pos)
-    eg = end_game_evaluation(pos)
-    p = phase(pos)
-    rule50 = rule_50(pos)
+def main_evaluation(position, *args):
+    mg = middle_game_evaluation(position)
+    eg = end_game_evaluation(position)
+    p = phase(position)
+    rule50 = rule_50(position)
 
     # Apply scaling factor to endgame evaluation
-    eg = eg * scale_factor(pos, eg) / 64
+    eg = eg * scale_factor(position, eg) / 64
 
     # Calculate combined evaluation
     v = ((mg * p + (eg * (128 - p))) // 128)
@@ -33,7 +31,7 @@ def main_evaluation(pos, *args):
         v = (v // 16) * 16
 
     # Add tempo adjustment
-    v += tempo(pos)
+    v += tempo(position)
 
     # Apply rule50 modification
     v = (v * (100 - rule50) // 100)
@@ -142,10 +140,71 @@ def phase(pos):
 def tempo(pos, square=None):
     if square is not None:
         return 0
-    return 28 * (1 if pos.w else -1)
+    return 28 * (1 if pos['w'] else -1)
 
 
 def rule_50(pos, square=None):
     if square is not None:
         return 0
-    return pos.m[0]
+    return pos['m'][0]
+
+
+'''Winnable'''
+
+
+def winnable(pos, square=None):
+    if square is not None:
+        return 0
+
+    pawns = 0
+    kx = [0, 0]
+    ky = [0, 0]
+    flanks = [0, 0]
+
+    for x in range(8):
+        open_files = [0, 0]
+        for y in range(8):
+            piece = board(pos, x, y).upper()
+
+            if piece == "P":
+                open_files[0 if board(pos, x, y) == "P" else 1] = 1
+                pawns += 1
+
+            if piece == "K":
+                king_index = 0 if board(pos, x, y) == "K" else 1
+                kx[king_index] = x
+                ky[king_index] = y
+
+        if open_files[0] + open_files[1] > 0:
+            flanks[0 if x < 4 else 1] = 1
+
+    pos2 = colorflip(pos)
+    passed_count = candidate_passed(pos) + candidate_passed(pos2)
+    both_flanks = 1 if flanks[0] and flanks[1] else 0
+    outflanking = abs(kx[0] - kx[1]) - abs(ky[0] - ky[1])
+    pure_pawn = 1 if (non_pawn_material(pos) + non_pawn_material(pos2)) == 0 else 0
+    almost_unwinnable = 1 if outflanking < 0 and both_flanks == 0 else 0
+    infiltration = 1 if ky[0] < 4 or ky[1] > 3 else 0
+
+    return (9 * passed_count
+            + 12 * pawns
+            + 9 * outflanking
+            + 21 * both_flanks
+            + 24 * infiltration
+            + 51 * pure_pawn
+            - 43 * almost_unwinnable
+            - 110)
+
+
+def winnable_total_mg(pos, v=None):
+    if v is None:
+        v = middle_game_evaluation(pos, nowinnable=True)
+
+    return (1 if v > 0 else -1 if v < 0 else 0) * max(min(winnable(pos) + 50, 0), -abs(v))
+
+
+def winnable_total_eg(pos, v=None):
+    if v is None:
+        v = end_game_evaluation(pos, nowinnable=True)
+
+    return (1 if v > 0 else -1 if v < 0 else 0) * max(winnable(pos), -abs(v))

@@ -1,6 +1,5 @@
-from Evaluation.attack import rook_xray_attack, queen_attack, bishop_xray_attack, knight_attack, attack, king_attack, \
-    pinned_direction
-from Evaluation.global_functions import board, all_squares, colorflip
+from Evaluation.attack import rook_xray_attack, queen_attack, bishop_xray_attack, knight_attack, attack, king_attack
+from Evaluation.global_functions import board, colorflip, blockers_for_king, sum_function
 from Evaluation.helpers import king_ring, queen_count
 from Evaluation.mobility import mobility_mg
 
@@ -29,12 +28,12 @@ def pawnless_flank(pos):
     return 1 if sum_pawns == 0 else 0
 
 
-def strength_square(pos, square=None):
+def strength_square(pos, square=None, param=None):
     if square is None:
-        return sum(strength_square(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, strength_square)
 
     v = 5
-    kx = min(6, max(1, square.x))
+    kx = min(6, max(1, square['x']))
     weakness = [
         [-6, 81, 93, 58, 39, 18, 25],
         [-43, 61, 35, -49, -29, -11, -63],
@@ -44,7 +43,7 @@ def strength_square(pos, square=None):
 
     for x in range(kx - 1, kx + 2):
         us = 0
-        for y in range(7, square.y - 1, -1):
+        for y in range(7, square['y'] - 1, -1):
             if board(pos, x, y) == "p" and board(pos, x - 1, y + 1) != "P" and board(pos, x + 1, y + 1) != "P":
                 us = y
         f = min(x, 7 - x)
@@ -53,13 +52,13 @@ def strength_square(pos, square=None):
     return v
 
 
-def storm_square(pos, square, eg=False):
+def storm_square(pos, square, eg=False, param=None):
     if square is None:
-        return sum(storm_square(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, storm_square)
 
     v = 0
     ev = 5
-    kx = min(6, max(1, square.x))
+    kx = min(6, max(1, square['x']))
     unblockedstorm = [
         [85, -289, -166, 97, 50, 45, 50],
         [46, -25, 122, 45, 37, -10, 20],
@@ -74,7 +73,7 @@ def storm_square(pos, square, eg=False):
     for x in range(kx - 1, kx + 2):
         us = 0
         them = 0
-        for y in range(7, square.y - 1, -1):
+        for y in range(7, square['y'] - 1, -1):
             if board(pos, x, y) == "p" and board(pos, x - 1, y + 1) != "P" and board(pos, x + 1, y + 1) != "P":
                 us = y
             if board(pos, x, y) == "P":
@@ -95,7 +94,7 @@ def shelter_strength(pos, square=None):
     tx = None
     for x in range(8):
         for y in range(8):
-            if board(pos, x, y) == "k" or (pos.c[2] and x == 6 and y == 0) or (pos.c[3] and x == 2 and y == 0):
+            if board(pos, x, y) == "k" or (pos['c'][2] and x == 6 and y == 0) or (pos['c'][3] and x == 2 and y == 0):
                 w1 = strength_square(pos, {'x': x, 'y': y})
                 s1 = storm_square(pos, {'x': x, 'y': y})
                 if s1 - w1 < s - w:
@@ -106,9 +105,9 @@ def shelter_strength(pos, square=None):
     if square is None:
         return w
 
-    if tx is not None and board(pos, square.x, square.y) == "p" and tx - 1 <= square.x <= tx + 1:
-        for y in range(square.y - 1, -1, -1):
-            if board(pos, square.x, y) == "p":
+    if tx is not None and board(pos, square['x'], square['y']) == "p" and tx - 1 <= square['x'] <= tx + 1:
+        for y in range(square['y'] - 1, -1, -1):
+            if board(pos, square['x'], y) == "p":
                 return 0
         return 1
 
@@ -121,7 +120,7 @@ def shelter_storm(pos, square=None):
     tx = None
     for x in range(8):
         for y in range(8):
-            if board(pos, x, y) == "k" or (pos.c[2] and x == 6 and y == 0) or (pos.c[3] and x == 2 and y == 0):
+            if board(pos, x, y) == "k" or (pos['c'][2] and x == 6 and y == 0) or (pos['c'][3] and x == 2 and y == 0):
                 w1 = strength_square(pos, {'x': x, 'y': y})
                 s1 = storm_square(pos, {'x': x, 'y': y})
                 if s1 - w1 < s - w:
@@ -132,9 +131,9 @@ def shelter_storm(pos, square=None):
     if square is None:
         return s
 
-    if tx is not None and board(pos, square.x, square.y).upper() == "P" and tx - 1 <= square.x <= tx + 1:
-        for y in range(square.y - 1, -1, -1):
-            if board(pos, square.x, y) == board(pos, square.x, square.y):
+    if tx is not None and board(pos, square['x'], square['y']).upper() == "P" and tx - 1 <= square['x'] <= tx + 1:
+        for y in range(square['y'] - 1, -1, -1):
+            if board(pos, square['x'], y) == board(pos, square['x'], square['y']):
                 return 0
         return 1
 
@@ -160,7 +159,7 @@ def king_pawn_distance(pos, square=None):
                 py = y
                 v = dist
 
-    if square is None or (square.x == px and square.y == py):
+    if square is None or (square['x'] == px and square['y'] == py):
         return v
 
     return 0
@@ -168,7 +167,7 @@ def king_pawn_distance(pos, square=None):
 
 def check(pos, square=None, type=None):
     if square is None:
-        return sum(check(pos, sq, type) for sq in all_squares(pos))
+        return sum_function(pos, check)
 
     if (rook_xray_attack(pos, square) and (type is None or type in [2, 4])) or \
             (queen_attack(pos, square) and (type is None or type == 3)):
@@ -176,7 +175,7 @@ def check(pos, square=None, type=None):
             ix = -1 if i == 0 else 1 if i == 1 else 0
             iy = -1 if i == 2 else 1 if i == 3 else 0
             for d in range(1, 8):
-                b = board(pos, square.x + d * ix, square.y + d * iy)
+                b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
                 if b == "k":
                     return 1
                 if b != "-" and b != "q":
@@ -188,21 +187,21 @@ def check(pos, square=None, type=None):
             ix = (i > 1) * 2 - 1
             iy = (i % 2 == 0) * 2 - 1
             for d in range(1, 8):
-                b = board(pos, square.x + d * ix, square.y + d * iy)
+                b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
                 if b == "k":
                     return 1
                 if b != "-" and b != "q":
                     break
 
     if knight_attack(pos, square) and (type is None or type in [0, 4]):
-        if board(pos, square.x + 2, square.y + 1) == "k" or \
-                board(pos, square.x + 2, square.y - 1) == "k" or \
-                board(pos, square.x + 1, square.y + 2) == "k" or \
-                board(pos, square.x + 1, square.y - 2) == "k" or \
-                board(pos, square.x - 2, square.y + 1) == "k" or \
-                board(pos, square.x - 2, square.y - 1) == "k" or \
-                board(pos, square.x - 1, square.y + 2) == "k" or \
-                board(pos, square.x - 1, square.y - 2) == "k":
+        if board(pos, square['x'] + 2, square['y'] + 1) == "k" or \
+                board(pos, square['x'] + 2, square['y'] - 1) == "k" or \
+                board(pos, square['x'] + 1, square['y'] + 2) == "k" or \
+                board(pos, square['x'] + 1, square['y'] - 2) == "k" or \
+                board(pos, square['x'] - 2, square['y'] + 1) == "k" or \
+                board(pos, square['x'] - 2, square['y'] - 1) == "k" or \
+                board(pos, square['x'] - 1, square['y'] + 2) == "k" or \
+                board(pos, square['x'] - 1, square['y'] - 2) == "k":
             return 1
 
     return 0
@@ -210,9 +209,9 @@ def check(pos, square=None, type=None):
 
 def safe_check(pos, square=None, type=None):
     if square is None:
-        return sum(safe_check(pos, sq, type) for sq in all_squares(pos))
+        return sum_function(pos, safe_check)
 
-    if "PNBRQK".find(board(pos, square.x, square.y)) >= 0:
+    if "PNBRQK".find(board(pos, square['x'], square['y'])) >= 0:
         return 0
     if not check(pos, square, type):
         return 0
@@ -223,26 +222,26 @@ def safe_check(pos, square=None, type=None):
     if type == 1 and safe_check(pos, square, 3):
         return 0
 
-    if (not attack(pos2, {'x': square.x, 'y': 7 - square.y}) or
+    if (not attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) or
         (weak_squares(pos, square) and attack(pos, square) > 1)) and \
-            (type != 3 or not queen_attack(pos2, {'x': square.x, 'y': 7 - square.y})):
+            (type != 3 or not queen_attack(pos2, {'x': square['x'], 'y': 7 - square['y']})):
         return 1
 
     return 0
 
 
-def king_attackers_count(pos, square=None):
+def king_attackers_count(pos, square=None, param=None):
     if square is None:
-        return sum(king_attackers_count(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, king_attackers_count)
 
-    if "PNBRQ".find(board(pos, square.x, square.y)) < 0:
+    if "PNBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
 
-    if board(pos, square.x, square.y) == "P":
+    if board(pos, square['x'], square['y']) == "P":
         v = 0
         for dir in [-1, 1]:
-            fr = board(pos, square.x + dir * 2, square.y) == "P"
-            if 0 <= square.x + dir <= 7 and king_ring(pos, {'x': square.x + dir, 'y': square.y - 1}, True):
+            fr = board(pos, square['x'] + dir * 2, square['y']) == "P"
+            if 0 <= square['x'] + dir <= 7 and king_ring(pos, {'x': square['x'] + dir, 'y': square['y'] - 1}, True):
                 v += 0.5 if fr else 1
         return v
 
@@ -258,21 +257,21 @@ def king_attackers_count(pos, square=None):
     return 0
 
 
-def king_attackers_weight(pos, square=None):
+def king_attackers_weight(pos, square=None, param=None):
     if square is None:
-        return sum(king_attackers_weight(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, king_attackers_weight)
 
     if king_attackers_count(pos, square):
-        return [0, 81, 52, 44, 10]["PNBRQ".find(board(pos, square.x, square.y))]
+        return [0, 81, 52, 44, 10]["PNBRQ".find(board(pos, square['x'], square['y']))]
 
     return 0
 
 
-def king_attacks(pos, square=None):
+def king_attacks(pos, square=None, param=None):
     if square is None:
-        return sum(king_attacks(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, king_attacks)
 
-    if "NBRQ".find(board(pos, square.x, square.y)) < 0:
+    if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
     if king_attackers_count(pos, square) == 0:
         return 0
@@ -297,9 +296,9 @@ def king_attacks(pos, square=None):
     return v
 
 
-def weak_bonus(pos, square=None):
+def weak_bonus(pos, square=None, param=None):
     if square is None:
-        return sum(weak_bonus(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, weak_bonus)
 
     if not weak_squares(pos, square):
         return 0
@@ -309,27 +308,27 @@ def weak_bonus(pos, square=None):
     return 1
 
 
-def weak_squares(pos, square=None):
+def weak_squares(pos, square=None, param=None):
     if square is None:
-        return sum(weak_squares(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, weak_squares)
 
     if attack(pos, square):
         pos2 = colorflip(pos)
-        attack_val = attack(pos2, {'x': square.x, 'y': 7 - square.y})
+        attack_val = attack(pos2, {'x': square['x'], 'y': 7 - square['y']})
         if attack_val >= 2:
             return 0
         if attack_val == 0:
             return 1
-        if king_attack(pos2, {'x': square.x, 'y': 7 - square.y}) or \
-                queen_attack(pos2, {'x': square.x, 'y': 7 - square.y}):
+        if king_attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) or \
+                queen_attack(pos2, {'x': square['x'], 'y': 7 - square['y']}):
             return 1
 
     return 0
 
 
-def unsafe_checks(pos, square=None):
+def unsafe_checks(pos, square=None, param=None):
     if square is None:
-        return sum(unsafe_checks(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, unsafe_checks)
 
     if check(pos, square, 0) and safe_check(pos, None, 0) == 0:
         return 1
@@ -341,9 +340,9 @@ def unsafe_checks(pos, square=None):
     return 0
 
 
-def knight_defender(pos, square=None):
+def knight_defender(pos, square=None, param=None):
     if square is None:
-        return sum(knight_defender(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, knight_defender)
 
     if knight_attack(pos, square) and king_attack(pos, square):
         return 1
@@ -357,7 +356,7 @@ def endgame_shelter(pos, square=None):
     e = None
     for x in range(8):
         for y in range(8):
-            if board(pos, x, y) == "k" or (pos.c[2] and x == 6 and y == 0) or (pos.c[3] and x == 2 and y == 0):
+            if board(pos, x, y) == "k" or (pos['c'][2] and x == 6 and y == 0) or (pos['c'][3] and x == 2 and y == 0):
                 w1 = strength_square(pos, {'x': x, 'y': y})
                 s1 = storm_square(pos, {'x': x, 'y': y})
                 e1 = storm_square(pos, {'x': x, 'y': y}, True)
@@ -372,35 +371,25 @@ def endgame_shelter(pos, square=None):
     return 0
 
 
-def blockers_for_king(pos, square=None):
+def flank_attack(pos, square=None, param=None):
     if square is None:
-        return sum(blockers_for_king(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, flank_attack)
 
-    if pinned_direction(colorflip(pos), {'x': square.x, 'y': 7 - square.y}):
-        return 1
-
-    return 0
-
-
-def flank_attack(pos, square=None):
-    if square is None:
-        return sum(flank_attack(pos, sq) for sq in all_squares(pos))
-
-    if square.y > 4:
+    if square['y'] > 4:
         return 0
 
     for x in range(8):
         for y in range(8):
             if board(pos, x, y) == "k":
-                if x == 0 and square.x > 2:
+                if x == 0 and square['x'] > 2:
                     return 0
-                if x < 3 and square.x > 3:
+                if x < 3 and square['x'] > 3:
                     return 0
-                if 3 <= x < 5 and (square.x < 2 or square.x > 5):
+                if 3 <= x < 5 and (square['x'] < 2 or square['x'] > 5):
                     return 0
-                if x >= 5 and square.x < 4:
+                if x >= 5 and square['x'] < 4:
                     return 0
-                if x == 7 and square.x < 5:
+                if x == 7 and square['x'] < 5:
                     return 0
 
     a = attack(pos, square)
@@ -409,28 +398,28 @@ def flank_attack(pos, square=None):
     return 2 if a > 1 else 1
 
 
-def flank_defense(pos, square=None):
+def flank_defense(pos, square=None, param=None):
     if square is None:
-        return sum(flank_defense(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, flank_defense)
 
-    if square.y > 4:
+    if square['y'] > 4:
         return 0
 
     for x in range(8):
         for y in range(8):
             if board(pos, x, y) == "k":
-                if x == 0 and square.x > 2:
+                if x == 0 and square['x'] > 2:
                     return 0
-                if x < 3 and square.x > 3:
+                if x < 3 and square['x'] > 3:
                     return 0
-                if 3 <= x < 5 and (square.x < 2 or square.x > 5):
+                if 3 <= x < 5 and (square['x'] < 2 or square['x'] > 5):
                     return 0
-                if x >= 5 and square.x < 4:
+                if x >= 5 and square['x'] < 4:
                     return 0
-                if x == 7 and square.x < 5:
+                if x == 7 and square['x'] < 5:
                     return 0
 
-    return 1 if attack(colorflip(pos), {'x': square.x, 'y': 7 - square.y}) > 0 else 0
+    return 1 if attack(colorflip(pos), {'x': square['x'], 'y': 7 - square['y']}) > 0 else 0
 
 
 def king_danger(pos):

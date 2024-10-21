@@ -1,15 +1,15 @@
 from Evaluation.attack import pawn_attack, knight_attack, bishop_xray_attack
-from Evaluation.global_functions import board, all_squares, sum_function
-from Evaluation.helpers import king_distance, pawn_attacks_span, rank, king_ring
+from Evaluation.global_functions import board, sum_function, rank
+from Evaluation.helpers import king_distance, pawn_attacks_span, king_ring
 from Evaluation.king import king_attackers_count
 from Evaluation.mobility import mobility
 
 
-def outpost(pos, square=None):
+def outpost(pos, square=None, param=None):
     if square is None:
-        return sum(outpost(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, outpost)
 
-    if board(pos, square.x, square.y) not in ["N", "B"]:
+    if board(pos, square['x'], square['y']) not in ["N", "B"]:
         return 0
 
     if not outpost_square(pos, square):
@@ -18,14 +18,14 @@ def outpost(pos, square=None):
     return 1
 
 
-def outpost_square(pos, square=None):
+def outpost_square(pos, square=None, param=None):
     if square is None:
-        return sum(outpost_square(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, outpost_square)
 
     if rank(pos, square) < 4 or rank(pos, square) > 6:
         return 0
 
-    if board(pos, square.x - 1, square.y + 1) != "P" and board(pos, square.x + 1, square.y + 1) != "P":
+    if board(pos, square['x'] - 1, square['y'] + 1) != "P" and board(pos, square['x'] + 1, square['y'] + 1) != "P":
         return 0
 
     if pawn_attacks_span(pos, square):
@@ -34,21 +34,21 @@ def outpost_square(pos, square=None):
     return 1
 
 
-def reachable_outpost(pos, square=None):
+def reachable_outpost(pos, square=None, param=None):
     if square is None:
-        return sum(reachable_outpost(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, reachable_outpost)
 
-    if board(pos, square.x, square.y) not in ["N", "B"]:
+    if board(pos, square['x'], square['y']) not in ["N", "B"]:
         return 0
 
     v = 0
     for x in range(8):
         for y in range(2, 5):
-            if (board(pos, square.x, square.y) == "N"
+            if (board(pos, square['x'], square['y']) == "N"
                 and "PNBRQK".find(board(pos, x, y)) < 0
                 and knight_attack(pos, {'x': x, 'y': y}, square)
                 and outpost_square(pos, {'x': x, 'y': y})) \
-                    or (board(pos, square.x, square.y) == "B"
+                    or (board(pos, square['x'], square['y']) == "B"
                         and "PNBRQK".find(board(pos, x, y)) < 0
                         and bishop_xray_attack(pos, {'x': x, 'y': y}, square)
                         and outpost_square(pos, {'x': x, 'y': y})):
@@ -58,27 +58,27 @@ def reachable_outpost(pos, square=None):
     return v
 
 
-def minor_behind_pawn(pos, square=None):
+def minor_behind_pawn(pos, square=None, param=None):
     if square is None:
-        return sum(minor_behind_pawn(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, minor_behind_pawn)
 
-    if board(pos, square.x, square.y) not in ["B", "N"]:
+    if board(pos, square['x'], square['y']) not in ["B", "N"]:
         return 0
 
-    if board(pos, square.x, square.y - 1).upper() != "P":
+    if board(pos, square['x'], square['y'] - 1).upper() != "P":
         return 0
 
     return 1
 
 
-def bishop_pawns(pos, square=None):
+def bishop_pawns(pos, square=None, param=None):
     if square is None:
-        return sum(bishop_pawns(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, bishop_pawns)
 
-    if board(pos, square.x, square.y) != "B":
+    if board(pos, square['x'], square['y']) != "B":
         return 0
 
-    c = (square.x + square.y) % 2
+    c = (square['x'] + square['y']) % 2
     v = 0
     blocked = 0
 
@@ -92,28 +92,28 @@ def bishop_pawns(pos, square=None):
     return v * (blocked + (1 if pawn_attack(pos, square) == 0 else 0))
 
 
-def rook_on_file(pos, square=None):
+def rook_on_file(pos, square=None, param=None):
     if square is None:
-        return sum(rook_on_file(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, rook_on_file)
 
-    if board(pos, square.x, square.y) != "R":
+    if board(pos, square['x'], square['y']) != "R":
         return 0
 
     open_file = 1
     for y in range(8):
-        if board(pos, square.x, y) == "P":
+        if board(pos, square['x'], y) == "P":
             return 0
-        if board(pos, square.x, y) == "p":
+        if board(pos, square['x'], y) == "p":
             open_file = 0
 
     return open_file + 1
 
 
-def trapped_rook(pos, square=None):
+def trapped_rook(pos, square=None, param=None):
     if square is None:
-        return sum(trapped_rook(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, trapped_rook)
 
-    if board(pos, square.x, square.y) != "R":
+    if board(pos, square['x'], square['y']) != "R":
         return 0
 
     if rook_on_file(pos, square) or mobility(pos, square) > 3:
@@ -125,17 +125,17 @@ def trapped_rook(pos, square=None):
             if board(pos, x, y) == "K":
                 kx, ky = x, y
 
-    if (kx < 4) != (square.x < kx):
+    if (kx < 4) != (square['x'] < kx):
         return 0
 
     return 1
 
 
-def weak_queen(pos, square=None):
+def weak_queen(pos, square=None, param=None):
     if square is None:
-        return sum(weak_queen(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, weak_queen)
 
-    if board(pos, square.x, square.y) != "Q":
+    if board(pos, square['x'], square['y']) != "Q":
         return 0
 
     for i in range(8):
@@ -144,7 +144,7 @@ def weak_queen(pos, square=None):
         count = 0
 
         for d in range(1, 8):
-            b = board(pos, square.x + d * ix, square.y + d * iy)
+            b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
 
             if b == "r" and (ix == 0 or iy == 0) and count == 1:
                 return 1
@@ -156,27 +156,27 @@ def weak_queen(pos, square=None):
     return 0
 
 
-def king_protector(pos, square=None):
+def king_protector(pos, square=None, param=None):
     if square is None:
-        return sum(king_protector(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, king_protector)
 
-    if board(pos, square.x, square.y) not in ["N", "B"]:
+    if board(pos, square['x'], square['y']) not in ["N", "B"]:
         return 0
 
     return king_distance(pos, square)
 
 
-def long_diagonal_bishop(pos, square=None):
+def long_diagonal_bishop(pos, square=None, param=None):
     if square is None:
-        return sum(long_diagonal_bishop(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, long_diagonal_bishop)
 
-    if board(pos, square.x, square.y) != "B":
+    if board(pos, square['x'], square['y']) != "B":
         return 0
 
-    if square.x - square.y != 0 and square.x - (7 - square.y) != 0:
+    if square['x'] - square['y'] != 0 and square['x'] - (7 - square['y']) != 0:
         return 0
 
-    x1, y1 = square.x, square.y
+    x1, y1 = square['x'], square['y']
 
     if min(x1, 7 - x1) > 2:
         return 0
@@ -196,7 +196,7 @@ def long_diagonal_bishop(pos, square=None):
     return 1
 
 
-def outpost_total(pos, square=None):
+def outpost_total(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, outpost_total)
 
@@ -232,7 +232,7 @@ def outpost_total(pos, square=None):
     return 4 if knight else 3
 
 
-def rook_on_queen_file(pos, square=None):
+def rook_on_queen_file(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, rook_on_queen_file)
 
@@ -327,11 +327,11 @@ def queen_infiltration(pos, square=None):
     return 1
 
 
-def pieces_mg(pos, square=None):
+def pieces_mg(pos, square=None, param=None):
     if square is None:
-        return sum(pieces_mg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, pieces_mg)
 
-    if "NBRQ".find(board(pos, square.x, square.y)) < 0:
+    if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
 
     v = 0
@@ -343,10 +343,10 @@ def pieces_mg(pos, square=None):
     v += 16 * rook_on_king_ring(pos, square)
     v += 24 * bishop_on_king_ring(pos, square)
     v += [0, 19, 48][rook_on_file(pos, square)]
-    v -= trapped_rook(pos, square) * 55 * (1 if pos.c[0] or pos.c[1] else 2)
+    v -= trapped_rook(pos, square) * 55 * (1 if pos['c'][0] or pos['c'][1] else 2)
     v -= 56 * weak_queen(pos, square)
     v -= 2 * queen_infiltration(pos, square)
-    v -= (8 if board(pos, square.x, square.y) == "N" else 6) * king_protector(pos, square)
+    v -= (8 if board(pos, square['x'], square['y']) == "N" else 6) * king_protector(pos, square)
     v += 45 * long_diagonal_bishop(pos, square)
 
     return v
@@ -354,9 +354,9 @@ def pieces_mg(pos, square=None):
 
 def pieces_eg(pos, square=None):
     if square is None:
-        return sum(pieces_eg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, pieces_eg)
 
-    if "NBRQ".find(board(pos, square.x, square.y)) < 0:
+    if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
 
     v = 0
@@ -366,7 +366,7 @@ def pieces_eg(pos, square=None):
     v -= 5 * bishop_xray_pawns(pos, square)
     v += 11 * rook_on_queen_file(pos, square)
     v += [0, 7, 29][rook_on_file(pos, square)]
-    v -= trapped_rook(pos, square) * 13 * (1 if pos.c[0] or pos.c[1] else 2)
+    v -= trapped_rook(pos, square) * 13 * (1 if pos['c'][0] or pos['c'][1] else 2)
     v -= 15 * weak_queen(pos, square)
     v += 14 * queen_infiltration(pos, square)
     v -= 9 * king_protector(pos, square)

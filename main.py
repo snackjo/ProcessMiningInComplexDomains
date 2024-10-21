@@ -3,6 +3,8 @@ chess_api_hikaru = ChessAPI("hikaru", "2018", "01")
 games_pgn = chess_api_hikaru.get_games()
 print(games_pgn)
 """
+import itertools
+
 import chess.pgn
 import chess.engine
 from Evaluation.main_evaluation import main_evaluation
@@ -22,7 +24,7 @@ def main() -> None:
     largest_changes = []
     prev_score = None
 
-    for move in game.mainline_moves():
+    """for move in game.mainline_moves():
         move_num = board.fullmove_number
         color = board.turn
         board.push(move)
@@ -40,7 +42,22 @@ def main() -> None:
 
     print("\n")
     for move_num, move, change, prev_score, overall_score, color in largest_changes:
-        print(f"Move: {move_num}{' W' if color else ' B'} {move}, Change: {change}, From: {prev_score} -> {overall_score}")
+        print(f"Move: {move_num}{' W' if color else ' B'} {move}, Change: {change}, From: {prev_score} -> {overall_score}")"""
+
+    moves = []
+    for move in game.mainline():
+        moves.append(move.move)
+
+    sliced_moves = moves[0:12]
+
+    for move in sliced_moves:
+        board.push(move)
+
+    info = engine.analyse(board, chess.engine.Limit(depth=20))
+    print(f"Engine score: {info['score'].white()}")
+
+    calc_score = main_evaluation(board_to_position(board), None)
+    print(f"Calculated score: {calc_score}")
     engine.quit()
 
 

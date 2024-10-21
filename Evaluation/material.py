@@ -1,10 +1,10 @@
-from Evaluation.global_functions import board, all_squares
+from Evaluation.global_functions import board, sum_function
 
 
-def non_pawn_material(pos, square=None):
+def non_pawn_material(pos, square=None, param=None):
     if square is None:
-        return sum(non_pawn_material(pos, sq) for sq in all_squares(pos))
-    i = "NBRQ".find(board(pos, square.x, square.y))
+        return sum_function(pos, non_pawn_material)
+    i = "NBRQ".find(board(pos, square['x'], square['y']))
     if i >= 0:
         return piece_value_bonus(pos, square, True)
     return 0
@@ -12,10 +12,10 @@ def non_pawn_material(pos, square=None):
 
 def piece_value_bonus(pos, square=None, mg=True):
     if square is None:
-        return sum(piece_value_bonus(pos, sq, mg) for sq in all_squares(pos))
+        return sum_function(pos, piece_value_bonus)
 
     a = [124, 781, 825, 1276, 2538] if mg else [206, 854, 915, 1380, 2682]
-    i = "PNBRQ".find(board(pos, square.x, square.y))
+    i = "PNBRQ".find(board(pos, square['x'], square['y']))
     if i >= 0:
         return a[i]
     return 0
@@ -23,7 +23,7 @@ def piece_value_bonus(pos, square=None, mg=True):
 
 def psqt_bonus(pos, square=None, mg=True):
     if square is None:
-        return sum(psqt_bonus(pos, sq, mg) for sq in all_squares(pos))
+        return sum_function(pos, psqt_bonus, mg)
 
     bonus = [
         [
@@ -89,34 +89,34 @@ def psqt_bonus(pos, square=None, mg=True):
         [0, 0, 0, 0, 0, 0, 0, 0]
     ]
 
-    i = "PNBRQK".find(board(pos, square.x, square.y))
+    i = "PNBRQK".find(board(pos, square['x'], square['y']))
     if i < 0:
         return 0
     if i == 0:
-        return pbonus[7 - square.y][square.x]
-    else:
-        return bonus[i - 1][7 - square.y][min(square.x, 7 - square.x)]
+        return pbonus[7 - square['x']][square['y']]
+    else:  ## HERE IS THE PROBLEM
+        return bonus[i - 1][min(square['x'], 7 - square['x'])][min(square['y'], 7 - square['y'])]
 
 
-def piece_value_mg(pos, square=None):
+def piece_value_mg(pos, square=None, param=None):
     if square is None:
-        return sum(piece_value_mg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, piece_value_mg)
     return piece_value_bonus(pos, square, True)
 
 
-def piece_value_eg(pos, square=None):
+def piece_value_eg(pos, square=None, param=None):
     if square is None:
-        return sum(piece_value_eg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, piece_value_eg)
     return piece_value_bonus(pos, square, False)
 
 
-def psqt_mg(pos, square=None):
+def psqt_mg(pos, square=None, param=None):
     if square is None:
-        return sum(psqt_mg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, psqt_mg)
     return psqt_bonus(pos, square, True)
 
 
-def psqt_eg(pos, square=None):
+def psqt_eg(pos, square=None, param=None):
     if square is None:
-        return sum(psqt_eg(pos, sq) for sq in all_squares(pos))
+        return sum_function(pos, psqt_eg)
     return psqt_bonus(pos, square, False)

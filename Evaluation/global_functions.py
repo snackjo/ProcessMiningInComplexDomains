@@ -24,41 +24,53 @@ pos = {
 
 
 # Function to get the board position at (x, y)
-def board(pos, x, y):
+def board(position, x, y):
     if 0 <= x <= 7 and 0 <= y <= 7:
-        return pos['b'][x][y]
+        return position['b'][x][y]
     return "x"
 
 
-# Function to colorflip the board (flip the board and pieces for the other side)
-def colorflip(pos):
+def colorflip(position):
     flipped_board = [["" for _ in range(8)] for _ in range(8)]
     for x in range(8):
         for y in range(8):
-            flipped_piece = pos['b'][x][7 - y]
+            flipped_piece = position['b'][7 - x][y]  # Flip ranks (x-axis), keep files (y-axis)
             color = flipped_piece.isupper()
             flipped_board[x][y] = flipped_piece.lower() if color else flipped_piece.upper()
 
-    # Update castling rights, en passant, and side to move
+    # Update castling rights (swap kingside/queenside for both sides)
+    flipped_castling = [position['c'][2], position['c'][3], position['c'][0], position['c'][1]]
+
+    # Update en passant (flip rank if en passant is available)
+    flipped_en_passant = None if position['e'] is None else [7 - position['e'][0], position['e'][1]]
+
+    # Flip the side to move
+    flipped_side_to_move = not position['w']
+
+    # Preserve move counts
+    flipped_move_counts = [position['m'][0], position['m'][1]]
+
     return {
         'b': flipped_board,
-        'c': [pos['c'][2], pos['c'][3], pos['c'][0], pos['c'][1]],
-        'e': None if pos['e'] is None else [pos['e'][0], 7 - pos['e'][1]],
-        'w': not pos['w'],
-        'm': [pos['m'][0], pos['m'][1]]
+        'c': flipped_castling,
+        'e': flipped_en_passant,
+        'w': flipped_side_to_move,
+        'm': flipped_move_counts
     }
 
 
+
+
 # Function to sum the result of applying a function to each board square
-def sum_function(pos, func, param=None):
+def sum_function(position, func, param=None):
     total_sum = 0
     for x in range(8):
         for y in range(8):
-            total_sum += func(pos, {'x': x, 'y': y}, param)
+            total_sum += func(position, {'x': x, 'y': y}, param)
     return total_sum
 
 
-def all_squares(position):
+def all_squares():
     return [{'x': x, 'y': y} for x in range(8) for y in range(8)]
 
 
@@ -96,7 +108,7 @@ def board_to_position(board_to_convert: chess.Board):
     move_counts = [board_to_convert.halfmove_clock, board_to_convert.fullmove_number]
 
     # Construct the final pos dictionary
-    pos = {
+    position = {
         'b': pos_board,
         'c': castling_rights,
         'e': ep_square_pos,
@@ -104,4 +116,58 @@ def board_to_position(board_to_convert: chess.Board):
         'm': move_counts
     }
 
-    return pos
+    return position
+
+
+'''Helpers'''
+
+
+def rank(position, square=None, param=None):
+    if square is None:
+        return sum_function(position, rank)
+    return 8 - square['x']
+
+
+'''King'''
+
+
+def blockers_for_king(position, square=None, param=None):
+    if square is None:
+        return sum_function(position, blockers_for_king)
+
+    if pinned_direction(colorflip(position), {'x': square['x'], 'y': 7 - square['y']}):
+        return 1
+
+    return 0
+
+
+'''Attack'''
+
+
+def pinned_direction(position, square=None):
+    if square is None:
+        return sum_function(position, pinned_direction)
+
+    if "PNBRQK".find(board(position, square['x'], square['y']).upper()) < 0:
+        return 0
+
+    color = 1 if "PNBRQK".find(board(position, square['x'], square['y'])) >= 0 else -1
+
+    for i in range(8):
+        ix = (i + (i > 3)) % 3 - 1
+        iy = ((i + (i > 3)) // 3) - 1
+        king = False
+        for d in range(1, 8):
+            b = board(position, square['x'] + d * ix, square['y'] + d * iy)
+            if b == "K":
+                king = True
+            if b != "-":
+                break
+        if king:
+            for d in range(1, 8):
+                b = board(position, square['x'] - d * ix, square['y'] - d * iy)
+                if b == "q" or (b == "b" and ix * iy != 0) or (b == "r" and ix * iy == 0):
+                    return abs(ix + iy * 3) * color
+                if b != "-":
+                    break
+    return 0
