@@ -6,17 +6,15 @@ def knight_attack(pos, square=None, s2=None):
         return sum_function(pos, knight_attack)
 
     v = 0
-    knight_moves = [
-        (-2, -1), (-2, 1), (2, -1), (2, 1),
-        (-1, -2), (-1, 2), (1, -2), (1, 2)
-    ]
 
-    for move in knight_moves:
-        dx, dy = move
-        b = board(pos, square['y'] + dy, square['x'] + dx)
-        if b == "N" and (s2 is None or (s2['y'] == square['y'] + dy and s2['x'] == square['x'] + dx)) and not pinned(
-                pos, {
-                    'y': square['y'] + dy, 'x': square['x'] + dx}):
+    for i in range(8):
+        ix = ((i > 3) + 1) * (((i % 4) > 1) * 2 - 1)
+        iy = (2 - (i > 3)) * ((i % 2 == 0) * 2 - 1)
+
+        b = board(pos, square['x'] + ix, square['y'] + iy)
+
+        if b == "N" and (s2 is None or (s2['x'] == square['x'] + ix and s2['y'] == square['y'] + iy)) and not pinned(
+                pos, {'x': square['x'] + ix, 'y': square['y'] + iy}):
             v += 1
     return v
 
@@ -26,18 +24,22 @@ def bishop_xray_attack(pos, square=None, s2=None):
         return sum_function(pos, bishop_xray_attack)
 
     v = 0
-    diagonal_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
-    for direction in diagonal_directions:
-        dx, dy = direction
+    for i in range(4):
+        ix = (2 if i > 1 else -2) // 2
+        iy = (2 if i % 2 == 0 else -2) // 2
+
         for d in range(1, 8):
-            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
-            if b == "B" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
-                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
-                if dir == 0 or abs(dx + dy * 3) == dir:
+            b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
+
+            if b == "B" and (s2 is None or (s2['x'] == square['x'] + d * ix and s2['y'] == square['y'] + d * iy)):
+                dir = pinned_direction(pos, {'x': square['x'] + d * ix, 'y': square['y'] + d * iy})
+                if dir == 0 or abs(ix + iy * 3) == dir:
                     v += 1
+
             if b != "-" and b != "Q" and b != "q":
                 break
+
     return v
 
 
@@ -46,15 +48,17 @@ def rook_xray_attack(pos, square=None, s2=None):
         return sum_function(pos, rook_xray_attack)
 
     v = 0
-    straight_directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
-    for direction in straight_directions:
-        dx, dy = direction
+    for i in range(4):
+        ix = -1 if i == 0 else (1 if i == 1 else 0)
+        iy = -1 if i == 2 else (1 if i == 3 else 0)
+
         for d in range(1, 8):
-            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
-            if b == "R" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
-                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
-                if dir == 0 or abs(dx + dy * 3) == dir:
+            b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
+
+            if b == "R" and (s2 is None or (s2['x'] == square['x'] + d * ix and s2['y'] == square['y'] + d * iy)):
+                dir = pinned_direction(pos, {'x': square['x'] + d * ix, 'y': square['y'] + d * iy})
+                if dir == 0 or abs(ix + iy * 3) == dir:
                     v += 1
             if b != "-" and b != "R" and b != "Q" and b != "q":
                 break
@@ -66,15 +70,17 @@ def queen_attack(pos, square=None, s2=None):
         return sum_function(pos, queen_attack)
 
     v = 0
-    all_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1), (0, 1), (1, 0), (0, -1), (-1, 0)]
 
-    for direction in all_directions:
-        dx, dy = direction
+    for i in range(8):
+        ix = (i + (i > 3)) % 3 - 1
+        iy = ((i + (i > 3)) // 3) - 1
+
         for d in range(1, 8):
-            b = board(pos, square['y'] + d * dy, square['x'] + d * dx)
-            if b == "Q" and (s2 is None or (s2['y'] == square['y'] + d * dy and s2['x'] == square['x'] + d * dx)):
-                dir = pinned_direction(pos, {'y': square['y'] + d * dy, 'x': square['x'] + d * dx})
-                if dir == 0 or abs(dx + dy * 3) == dir:
+            b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
+
+            if b == "Q" and (s2 is None or (s2['x'] == square['x'] + d * ix and s2['y'] == square['y'] + d * iy)):
+                dir = pinned_direction(pos, {'x': square['x'] + d * ix, 'y': square['y'] + d * iy})
+                if dir == 0 or abs(ix + iy * 3) == dir:
                     v += 1
             if b != "-":
                 break
@@ -86,28 +92,26 @@ def pawn_attack(pos, square=None, param=None):
         return sum_function(pos, pawn_attack)
 
     v = 0
-    if board(pos, square['y'] + 1, square['x'] - 1) == "P":
+    if board(pos, square['x'] - 1, square['y'] + 1) == "P":
         v += 1
-    if board(pos, square['y'] + 1, square['x'] + 1) == "P":
+    if board(pos, square['x'] + 1, square['y'] + 1) == "P":
         v += 1
     return v
 
 
-def king_attack(pos, square=None, param=None):
+def king_attack(pos, square=None):
     if square is None:
         return sum_function(pos, king_attack)
 
-    king_moves = [
-        (-1, -1), (-1, 0), (-1, 1),
-        (0, -1), (0, 1),
-        (1, -1), (1, 0), (1, 1)
-    ]
+    for i in range(8):
+        ix = (i + (i > 3)) % 3 - 1
+        iy = ((i + (i > 3)) // 3) - 1
 
-    for move in king_moves:
-        dx, dy = move
-        if board(pos, square['y'] + dy, square['x'] + dx) == "K":
+        if board(pos, square['x'] + ix, square['y'] + iy) == "K":
             return 1
+
     return 0
+
 
 
 def attack(pos, square=None, param=None):

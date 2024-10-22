@@ -212,10 +212,13 @@ def restricted(pos, square=None, param=None):
 
     pos2 = colorflip(pos)
 
-    if not attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) or pawn_attack(pos2,
-                                                                                 {'x': square['x'],
-                                                                                  'y': 7 - square['y']}) > 0 or \
-            (attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) > 1 and attack(pos, square) == 1):
+    if not attack(pos2, {'x': square['x'], 'y': 7 - square['y']}):
+        return 0
+
+    if pawn_attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) > 0:
+        return 0
+
+    if attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) > 1 and attack(pos, square) == 1:
         return 0
 
     return 1

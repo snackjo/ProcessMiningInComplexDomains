@@ -1,5 +1,5 @@
 from Evaluation.attack import pawn_attack, knight_attack, bishop_xray_attack
-from Evaluation.global_functions import board, sum_function, rank
+from Evaluation.global_functions import board, sum_function, rank, colorflip
 from Evaluation.helpers import king_distance, pawn_attacks_span, king_ring
 from Evaluation.king import king_attackers_count
 from Evaluation.mobility import mobility
@@ -86,11 +86,10 @@ def bishop_pawns(pos, square=None, param=None):
         for y in range(8):
             if board(pos, x, y) == "P" and (x + y) % 2 == c:
                 v += 1
-            if board(pos, x, y) == "P" and 1 < x < 6 and board(pos, x, y - 1) != "-":
+            if board(pos, x, y) == "P" and board(pos, x, y - 1) != "-":
                 blocked += 1
 
-    return v * (blocked + (1 if pawn_attack(pos, square) == 0 else 0))
-
+    return v * (blocked + (0 if pawn_attack(pos, square) > 0 else 1))
 
 def rook_on_file(pos, square=None, param=None):
     if square is None:
@@ -246,7 +245,7 @@ def rook_on_queen_file(pos, square=None, param=None):
     return 0
 
 
-def bishop_xray_pawns(pos, square=None):
+def bishop_xray_pawns(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, bishop_xray_pawns)
 
@@ -262,7 +261,7 @@ def bishop_xray_pawns(pos, square=None):
     return count
 
 
-def rook_on_king_ring(pos, square=None):
+def rook_on_king_ring(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, rook_on_king_ring)
 
@@ -279,7 +278,7 @@ def rook_on_king_ring(pos, square=None):
     return 0
 
 
-def bishop_on_king_ring(pos, square=None):
+def bishop_on_king_ring(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, bishop_on_king_ring)
 
@@ -305,7 +304,7 @@ def bishop_on_king_ring(pos, square=None):
     return 0
 
 
-def queen_infiltration(pos, square=None):
+def queen_infiltration(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, queen_infiltration)
 
@@ -352,7 +351,7 @@ def pieces_mg(pos, square=None, param=None):
     return v
 
 
-def pieces_eg(pos, square=None):
+def pieces_eg(pos, square=None, param=None):
     if square is None:
         return sum_function(pos, pieces_eg)
 

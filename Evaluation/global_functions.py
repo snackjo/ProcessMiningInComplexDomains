@@ -1,13 +1,13 @@
 # Define the position representation as a dictionary in Python
 pos = {
-    'b': [["r", "-", "-", "p", "-", "-", "P", "-"],
-          ["n", "-", "p", "-", "-", "-", "P", "-"],
-          ["b", "-", "p", "-", "B", "P", "Q", "-"],
-          ["q", "-", "p", "-", "P", "-", "-", "R"],
-          ["-", "n", "p", "-", "P", "B", "-", "R"],
-          ["r", "-", "p", "-", "P", "N", "-", "-"],
-          ["k", "b", "p", "-", "-", "N", "P", "K"],
-          ["-", "-", "p", "-", "-", "-", "P", "-"]],
+    'b': [["r", "-", "b", "-", "p", "-", "P", "R"],
+          ["n", "-", "p", "-", "-", "P", "B", "N"],
+          ["-", "-", "p", "-", "-", "-", "P", "-"],
+          ["q", "-", "-", "p", "P", "B", "-", "Q"],
+          ["k", "p", "-", "-", "P", "-", "-", "K"],
+          ["b", "p", "-", "-", "-", "P", "-", "-"],
+          ["n", "p", "-", "-", "-", "-", "P", "N"],
+          ["r", "p", "-", "-", "-", "-", "P", "R"]],
 
     # Castling rights
     'c': [True, True, True, True],
@@ -31,32 +31,47 @@ def board(position, x, y):
 
 
 def colorflip(position):
+    # Initialize an empty 8x8 board for the flipped position
     flipped_board = [["" for _ in range(8)] for _ in range(8)]
-    for x in range(8):
-        for y in range(8):
-            flipped_piece = position['b'][7 - x][y]  # Flip ranks (x-axis), keep files (y-axis)
-            color = flipped_piece.isupper()
-            flipped_board[x][y] = flipped_piece.lower() if color else flipped_piece.upper()
+
+    # Flip the pieces by changing case and swapping files only
+    for y in range(8):
+        for x in range(8):
+            piece = position['b'][y][x]  # Get the piece at (x, y)
+            if piece != "-":  # Ignore empty squares
+                if piece.isupper():
+                    # Convert white to black and flip the file (x-axis)
+                    flipped_board[y][7 - x] = piece.lower()
+                else:
+                    # Convert black to white and flip the file (x-axis)
+                    flipped_board[y][7 - x] = piece.upper()
+            else:
+                flipped_board[y][7 - x] = "-"
 
     # Update castling rights (swap kingside/queenside for both sides)
     flipped_castling = [position['c'][2], position['c'][3], position['c'][0], position['c'][1]]
 
-    # Update en passant (flip rank if en passant is available)
-    flipped_en_passant = None if position['e'] is None else [7 - position['e'][0], position['e'][1]]
+    # En passant remains unchanged (no need to flip horizontally)
+    flipped_en_passant = position['e']
 
     # Flip the side to move
     flipped_side_to_move = not position['w']
 
-    # Preserve move counts
+    # Preserve move counts (these remain the same)
     flipped_move_counts = [position['m'][0], position['m'][1]]
 
-    return {
+    # Construct the flipped position dictionary
+    flipped_position = {
         'b': flipped_board,
         'c': flipped_castling,
         'e': flipped_en_passant,
         'w': flipped_side_to_move,
         'm': flipped_move_counts
     }
+
+    return flipped_position
+
+
 
 
 
@@ -77,6 +92,9 @@ def all_squares():
 import chess
 
 
+import chess
+
+# Function to convert python-chess board into a flipped custom position dictionary
 def board_to_position(board_to_convert: chess.Board):
     # Initialize an empty 8x8 board representation
     pos_board = [["-" for _ in range(8)] for _ in range(8)]
@@ -85,8 +103,8 @@ def board_to_position(board_to_convert: chess.Board):
     for square in chess.SQUARES:
         piece = board_to_convert.piece_at(square)
         if piece:
-            rank = 7 - (square // 8)  # Convert to rank in your format (0-indexed)
-            file = square % 8  # Convert to file in your format (0-indexed)
+            rank = square % 8  # Flipping the rank
+            file = 7 - (square // 8)  # Keeping the file the same
             pos_board[rank][file] = piece.symbol()
 
     # Castling rights
@@ -119,13 +137,14 @@ def board_to_position(board_to_convert: chess.Board):
     return position
 
 
+
 '''Helpers'''
 
 
 def rank(position, square=None, param=None):
     if square is None:
         return sum_function(position, rank)
-    return 8 - square['x']
+    return 8 - square['y']
 
 
 '''King'''

@@ -44,10 +44,12 @@ def strength_square(pos, square=None, param=None):
     for x in range(kx - 1, kx + 2):
         us = 0
         for y in range(7, square['y'] - 1, -1):
-            if board(pos, x, y) == "p" and board(pos, x - 1, y + 1) != "P" and board(pos, x + 1, y + 1) != "P":
+            if (board(pos, x, y) == "p"
+                and board(pos, x - 1, y + 1) != "P"
+                and board(pos, x + 1, y + 1) != "P"):
                 us = y
         f = min(x, 7 - x)
-        v += weakness[f][us] if us in weakness[f] else 0
+        v += weakness[f][us] if us < len(weakness[f]) else 0
 
     return v
 
@@ -94,7 +96,10 @@ def shelter_strength(pos, square=None):
     tx = None
     for x in range(8):
         for y in range(8):
-            if board(pos, x, y) == "k" or (pos['c'][2] and x == 6 and y == 0) or (pos['c'][3] and x == 2 and y == 0):
+            if (board(pos, x, y) == "k"
+                    or (pos['c'][2] and x == 6 and y == 0)
+                    or (pos['c'][3] and x == 2 and y == 0)):
+
                 w1 = strength_square(pos, {'x': x, 'y': y})
                 s1 = storm_square(pos, {'x': x, 'y': y})
                 if s1 - w1 < s - w:
@@ -105,7 +110,7 @@ def shelter_strength(pos, square=None):
     if square is None:
         return w
 
-    if tx is not None and board(pos, square['x'], square['y']) == "p" and tx - 1 <= square['x'] <= tx + 1:
+    if tx is not None and board(pos, square['x'], square['y']) == "p" and (tx - 1) <= square['x'] <= (tx + 1):
         for y in range(square['y'] - 1, -1, -1):
             if board(pos, square['x'], y) == "p":
                 return 0
@@ -440,15 +445,15 @@ def king_danger(pos):
          + 148 * unsafe_checks_val
          + 98 * blockers_for_king_val
          - 4 * king_flank_defense
-         + ((3 * king_flank_attack * king_flank_attack / 8) << 0)
+         + (3 * king_flank_attack * king_flank_attack // 8)
          - 873 * no_queen
-         - ((6 * (shelter_strength(pos) - shelter_storm(pos)) / 8) << 0)
+         - (6 * (shelter_strength(pos) - shelter_storm(pos)) // 8)
          + mobility_mg(pos) - mobility_mg(colorflip(pos))
          + 37
-         + ((772 * min(safe_check(pos, None, 3), 1.45)) << 0)
-         + ((1084 * min(safe_check(pos, None, 2), 1.75)) << 0)
-         + ((645 * min(safe_check(pos, None, 1), 1.50)) << 0)
-         + ((792 * min(safe_check(pos, None, 0), 1.62)) << 0))
+         + (772 * min(safe_check(pos, None, 3), 1.45) // 1)
+         + (1084 * min(safe_check(pos, None, 2), 1.75) // 1)
+         + (645 * min(safe_check(pos, None, 1), 1.50) // 1)
+         + (792 * min(safe_check(pos, None, 0), 1.62) // 1))
 
     return v if v > 100 else 0
 
@@ -458,7 +463,7 @@ def king_mg(pos):
     kd = king_danger(pos)
     v -= shelter_strength(pos)
     v += shelter_storm(pos)
-    v += (kd * kd / 4096) << 0
+    v += (kd * kd // 4096)
     v += 8 * flank_attack(pos)
     v += 17 * pawnless_flank(pos)
     return v
@@ -469,5 +474,5 @@ def king_eg(pos):
     v -= 16 * king_pawn_distance(pos)
     v += endgame_shelter(pos)
     v += 95 * pawnless_flank(pos)
-    v += (king_danger(pos) / 16) << 0
+    v += int((king_danger(pos) / 16))
     return v

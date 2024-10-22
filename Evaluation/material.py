@@ -93,9 +93,9 @@ def psqt_bonus(pos, square=None, mg=True):
     if i < 0:
         return 0
     if i == 0:
-        return pbonus[7 - square['x']][square['y']]
-    else:  ## HERE IS THE PROBLEM
-        return bonus[i - 1][min(square['x'], 7 - square['x'])][min(square['y'], 7 - square['y'])]
+        return pbonus[7 - square['y']][square['x']]
+    else:
+        return bonus[i - 1][7 - square['y']][min(square['x'], 7 - square['x'])]
 
 
 def piece_value_mg(pos, square=None, param=None):

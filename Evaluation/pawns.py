@@ -1,4 +1,4 @@
-from Evaluation.global_functions import board, rank, sum_function
+from Evaluation.global_functions import board, rank, sum_function, colorflip
 
 
 def isolated(pos, square=None, param=None):
@@ -22,8 +22,8 @@ def opposed(pos, square=None, param=None):
     if board(pos, square['x'], square['y']) != "P":
         return 0
 
-    for x in range(square['x']):
-        if board(pos, x, square['y']) == "p":
+    for y in range(square['y']):
+        if board(pos, square['x'], y) == "p":
             return 1
 
     return 0
@@ -36,7 +36,7 @@ def phalanx(pos, square=None, param=None):
     if board(pos, square['x'], square['y']) != "P":
         return 0
 
-    if board(pos, square['x'], square['y'] - 1) == "P" or board(pos, square['x'], square['y'] + 1) == "P":
+    if board(pos, square['x'] - 1, square['y']) == "P" or board(pos, square['x'] + 1, square['y']) == "P":
         return 1
 
     return 0
@@ -49,7 +49,7 @@ def supported(pos, square=None, param=None):
     if board(pos, square['x'], square['y']) != "P":
         return 0
 
-    return (board(pos, square['x'] + 1, square['y'] - 1) == "P") + (board(pos, square['x'] + 1, square['y'] + 1) == "P")
+    return (board(pos, square['x'] - 1, square['y'] + 1) == "P") + (board(pos, square['x'] + 1, square['y'] + 1) == "P")
 
 
 def backward(pos, square=None, param=None):
@@ -207,7 +207,8 @@ def pawns_eg(pos, square=None, param=None):
         v -= 24
 
     v -= doubled(pos, square) * 56
-    v += connected(pos, square) * connected_bonus(pos, square) * (rank(pos, square) - 3) // 4
+    if connected(pos, square):
+        v += int(connected_bonus(pos, square) * (rank(pos, square) - 3) / 4)
     v -= 27 * weak_unopposed_pawn(pos, square)
     v -= 56 * weak_lever(pos, square)
     v += [0, -4, 4][blocked(pos, square)]
