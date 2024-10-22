@@ -24,17 +24,17 @@ def main_evaluation(position, *args):
     eg = eg * scale_factor(position, eg) / 64
 
     # Calculate combined evaluation
-    v = ((mg * p + (eg * (128 - p))) // 128)
+    v = int((mg * p + int(eg * (128 - p))) / 128)
 
     # Adjust v if there's only one argument (as in original code)
     if len(args) == 0:
-        v = (v // 16) * 16
+        v = int(v / 16) * 16
 
     # Add tempo adjustment
     v += tempo(position)
 
     # Apply rule50 modification
-    v = (v * (100 - rule50) // 100)
+    v = int(v * (100 - rule50) / 100)
 
     return v
 
@@ -134,7 +134,7 @@ def phase(pos):
     endgame_limit = 3915
     npm = non_pawn_material(pos) + non_pawn_material(colorflip(pos))
     npm = max(endgame_limit, min(npm, midgame_limit))
-    return ((npm - endgame_limit) * 128) // (midgame_limit - endgame_limit)
+    return int(((npm - endgame_limit) * 128) / (midgame_limit - endgame_limit))
 
 
 def tempo(pos, square=None):

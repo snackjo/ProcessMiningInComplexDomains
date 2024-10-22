@@ -445,15 +445,15 @@ def king_danger(pos):
          + 148 * unsafe_checks_val
          + 98 * blockers_for_king_val
          - 4 * king_flank_defense
-         + (3 * king_flank_attack * king_flank_attack // 8)
+         + int(3 * king_flank_attack * king_flank_attack / 8)
          - 873 * no_queen
-         - (6 * (shelter_strength(pos) - shelter_storm(pos)) // 8)
+         - int(6 * (shelter_strength(pos) - shelter_storm(pos)) / 8)
          + mobility_mg(pos) - mobility_mg(colorflip(pos))
          + 37
-         + (772 * min(safe_check(pos, None, 3), 1.45) // 1)
-         + (1084 * min(safe_check(pos, None, 2), 1.75) // 1)
-         + (645 * min(safe_check(pos, None, 1), 1.50) // 1)
-         + (792 * min(safe_check(pos, None, 0), 1.62) // 1))
+         + int(772 * min(safe_check(pos, None, 3), 1.45))
+         + int(1084 * min(safe_check(pos, None, 2), 1.75))
+         + int(645 * min(safe_check(pos, None, 1), 1.50))
+         + int(792 * min(safe_check(pos, None, 0), 1.62)))
 
     return v if v > 100 else 0
 
@@ -463,7 +463,7 @@ def king_mg(pos):
     kd = king_danger(pos)
     v -= shelter_strength(pos)
     v += shelter_storm(pos)
-    v += (kd * kd // 4096)
+    v += int(kd * kd / 4096)
     v += 8 * flank_attack(pos)
     v += 17 * pawnless_flank(pos)
     return v

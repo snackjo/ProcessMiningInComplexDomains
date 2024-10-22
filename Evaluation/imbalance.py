@@ -52,4 +52,4 @@ def imbalance_total(pos, square=None):
     v = 0
     v += imbalance(pos) - imbalance(colorflip(pos))
     v += bishop_pair(pos) - bishop_pair(colorflip(pos))
-    return v // 16
+    return int(v / 16)

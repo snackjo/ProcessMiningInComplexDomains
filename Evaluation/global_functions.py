@@ -174,7 +174,7 @@ def pinned_direction(position, square=None):
 
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
+        iy = int((i + (i > 3)) / 3) - 1
         king = False
         for d in range(1, 8):
             b = board(position, square['x'] + d * ix, square['y'] + d * iy)

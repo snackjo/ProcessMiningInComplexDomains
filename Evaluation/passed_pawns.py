@@ -68,7 +68,7 @@ def king_proximity(pos, square=None, param=None):
     for x in range(8):
         for y in range(8):
             if board(pos, x, y) == "k":
-                v += ((min(max(abs(y - square['y'] + 1), abs(x - square['x'])), 5) * 19 // 4)) * w
+                v += int((min(max(abs(y - square['y'] + 1), abs(x - square['x'])), 5) * 19 / 4)) * w
             if board(pos, x, y) == "K":
                 v -= min(max(abs(y - square['y'] + 1), abs(x - square['x'])), 5) * 2 * w
                 if square['y'] > 1:

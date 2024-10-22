@@ -73,7 +73,7 @@ def queen_attack(pos, square=None, s2=None):
 
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
+        iy = int((i + (i > 3)) / 3) - 1
 
         for d in range(1, 8):
             b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
@@ -105,7 +105,7 @@ def king_attack(pos, square=None):
 
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
-        iy = ((i + (i > 3)) // 3) - 1
+        iy = int((i + (i > 3)) / 3) - 1
 
         if board(pos, square['x'] + ix, square['y'] + iy) == "K":
             return 1

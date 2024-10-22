@@ -47,4 +47,4 @@ def space(pos, square=None):
                 blocked_count += 1
 
     weight = piece_count - 3 + min(blocked_count, 9)
-    return (space_area(pos, square) * weight * weight // 16)
+    return int(space_area(pos, square) * weight * weight / 16)

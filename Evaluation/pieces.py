@@ -139,7 +139,7 @@ def weak_queen(pos, square=None, param=None):
 
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
-        iy = (i + (i > 3)) // 3 - 1
+        iy = int((i + (i > 3)) / 3) - 1
         count = 0
 
         for d in range(1, 8):
