@@ -45,8 +45,8 @@ def strength_square(pos, square=None, param=None):
         us = 0
         for y in range(7, square['y'] - 1, -1):
             if (board(pos, x, y) == "p"
-                and board(pos, x - 1, y + 1) != "P"
-                and board(pos, x + 1, y + 1) != "P"):
+                    and board(pos, x - 1, y + 1) != "P"
+                    and board(pos, x + 1, y + 1) != "P"):
                 us = y
         f = min(x, 7 - x)
         v += weakness[f][us] if us < len(weakness[f]) else 0
@@ -214,7 +214,7 @@ def check(pos, square=None, type=None):
 
 def safe_check(pos, square=None, type=None):
     if square is None:
-        return sum_function(pos, safe_check)
+        return sum_function(pos, safe_check, type)
 
     if "PNBRQK".find(board(pos, square['x'], square['y'])) >= 0:
         return 0
@@ -227,9 +227,9 @@ def safe_check(pos, square=None, type=None):
     if type == 1 and safe_check(pos, square, 3):
         return 0
 
-    if (not attack(pos2, {'x': square['x'], 'y': 7 - square['y']}) or
-        (weak_squares(pos, square) and attack(pos, square) > 1)) and \
-            (type != 3 or not queen_attack(pos2, {'x': square['x'], 'y': 7 - square['y']})):
+    if (not attack(pos2, {'x': square['x'], 'y': 7 - square['y']})
+        or (weak_squares(pos, square) and attack(pos, square) > 1)) \
+            and (type != 3 or not queen_attack(pos2, {'x': square['x'], 'y': 7 - square['y']})):
         return 1
 
     return 0
@@ -253,7 +253,7 @@ def king_attackers_count(pos, square=None, param=None):
     for x in range(8):
         for y in range(8):
             s2 = {'x': x, 'y': y}
-            if king_ring(pos, s2):
+            if king_ring(pos, s2, False):
                 if knight_attack(pos, s2, square) or \
                         bishop_xray_attack(pos, s2, square) or \
                         rook_xray_attack(pos, s2, square) or \

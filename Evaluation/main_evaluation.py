@@ -14,24 +14,23 @@ from Evaluation.space import space
 from Evaluation.threats import threats_mg, threats_eg
 
 
-def main_evaluation(position, *args):
-    mg = middle_game_evaluation(position)
-    eg = end_game_evaluation(position)
-    p = phase(position)
-    rule50 = rule_50(position)
+def main_evaluation(pos, *args):
+    mg = middle_game_evaluation(pos)
+    eg = end_game_evaluation(pos)
+    p = phase(pos)
+    rule50 = rule_50(pos)
 
     # Apply scaling factor to endgame evaluation
-    eg = eg * scale_factor(position, eg) / 64
+    eg = eg * scale_factor(pos, eg) / 64
 
     # Calculate combined evaluation
     v = int((mg * p + int(eg * (128 - p))) / 128)
 
-    # Adjust v if there's only one argument (as in original code)
-    if len(args) == 0:
+    if len(args) == 0 or args[0] is None:
         v = int(v / 16) * 16
 
     # Add tempo adjustment
-    v += tempo(position)
+    v += tempo(pos)
 
     # Apply rule50 modification
     v = int(v * (100 - rule50) / 100)

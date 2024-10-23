@@ -176,7 +176,7 @@ def doubled_isolated(pos, square=None, param=None):
 
 def pawns_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, pawns_mg)
+        return sum_function(pos, pawns_mg, param)
 
     v = 0
     if doubled_isolated(pos, square):
@@ -196,7 +196,7 @@ def pawns_mg(pos, square=None, param=None):
 
 def pawns_eg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, pawns_eg)
+        return sum_function(pos, pawns_eg, param)
 
     v = 0
     if doubled_isolated(pos, square):

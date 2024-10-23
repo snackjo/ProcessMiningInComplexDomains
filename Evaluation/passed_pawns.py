@@ -162,7 +162,7 @@ def passed_leverable(pos, square=None, param=None):
 
 def passed_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, passed_mg)
+        return sum_function(pos, passed_mg, param)
 
     if not passed_leverable(pos, square):
         return 0

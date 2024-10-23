@@ -1,5 +1,5 @@
 from Evaluation.attack import pawn_attack, knight_attack, bishop_xray_attack
-from Evaluation.global_functions import board, sum_function, rank, colorflip
+from Evaluation.global_functions import board, sum_function, rank
 from Evaluation.helpers import king_distance, pawn_attacks_span, king_ring
 from Evaluation.king import king_attackers_count
 from Evaluation.mobility import mobility
@@ -84,12 +84,15 @@ def bishop_pawns(pos, square=None, param=None):
 
     for x in range(8):
         for y in range(8):
-            if board(pos, x, y) == "P" and (x + y) % 2 == c:
+            if board(pos, x, y) == "P" and c == (x + y) % 2:
                 v += 1
-            if board(pos, x, y) == "P" and board(pos, x, y - 1) != "-":
+            if (board(pos, x, y) == "P"
+                    and 1 < x < 6
+                    and board(pos, x, y - 1) != "-"):
                 blocked += 1
 
     return v * (blocked + (0 if pawn_attack(pos, square) > 0 else 1))
+
 
 def rook_on_file(pos, square=None, param=None):
     if square is None:
@@ -328,7 +331,7 @@ def queen_infiltration(pos, square=None, param=None):
 
 def pieces_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, pieces_mg)
+        return sum_function(pos, pieces_mg, param)
 
     if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
@@ -353,7 +356,7 @@ def pieces_mg(pos, square=None, param=None):
 
 def pieces_eg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, pieces_eg)
+        return sum_function(pos, pieces_eg, param)
 
     if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0

@@ -154,11 +154,20 @@ def slider_on_queen(pos, square=None, param=None):
 
     pos2 = colorflip(pos)
 
-    if queen_count(pos2) != 1 or board(pos, square['x'], square['y']) == "P" or \
-            board(pos, square['x'] - 1, square['y'] - 1) == "p" or board(pos, square['x'] + 1, square['y'] - 1) == "p":
+    if queen_count(pos2) != 1:
         return 0
 
-    if attack(pos, square) <= 1 or not mobility_area(pos, square):
+    if board(pos, square['x'], square['y']) == "P":
+        return 0
+
+    if board(pos, square['x'] - 1, square['y'] - 1) == "p":
+        return 0
+    if board(pos, square['x'] + 1, square['y'] - 1) == "p":
+        return 0
+    if attack(pos, square) <= 1:
+        return 0
+
+    if not mobility_area(pos, square):
         return 0
 
     diagonal = queen_attack_diagonal(pos2, {'x': square['x'], 'y': 7 - square['y']})

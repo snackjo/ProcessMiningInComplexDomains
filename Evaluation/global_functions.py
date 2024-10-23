@@ -163,30 +163,42 @@ def blockers_for_king(position, square=None, param=None):
 '''Attack'''
 
 
-def pinned_direction(position, square=None):
+def pinned_direction(position, square):
     if square is None:
         return sum_function(position, pinned_direction)
 
-    if "PNBRQK".find(board(position, square['x'], square['y']).upper()) < 0:
+    piece = board(position, square['x'], square['y']).upper()
+    if "PNBRQK".find(piece) < 0:
         return 0
 
-    color = 1 if "PNBRQK".find(board(position, square['x'], square['y'])) >= 0 else -1
+
+    color = 1
+    if "PNBRQK".find(board(position, square['x'], square['y'])) < 0:
+        color = -1
 
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
         iy = int((i + (i > 3)) / 3) - 1
         king = False
+
+        # Check direction from piece towards the king
         for d in range(1, 8):
             b = board(position, square['x'] + d * ix, square['y'] + d * iy)
             if b == "K":
                 king = True
             if b != "-":
                 break
+
+        # If there's a king in line, check the opposite direction for attackers
         if king:
             for d in range(1, 8):
                 b = board(position, square['x'] - d * ix, square['y'] - d * iy)
-                if b == "q" or (b == "b" and ix * iy != 0) or (b == "r" and ix * iy == 0):
+                if b == "q" \
+                        or (b == "b" and ix * iy != 0) \
+                        or (b == "r" and ix * iy == 0):
                     return abs(ix + iy * 3) * color
                 if b != "-":
                     break
+
     return 0
+

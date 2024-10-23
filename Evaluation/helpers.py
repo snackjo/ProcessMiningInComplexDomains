@@ -68,14 +68,16 @@ def king_ring(pos, square=None, full=True):
     if square is None:
         return sum_function(pos, king_ring)
 
-    if not full and board(pos, square['x'] + 1, square['y'] - 1) == "p" and board(pos, square['x'] - 1,
-                                                                                  square['y'] - 1) == "p":
-        return 0
+    if not full:
+        if (board(pos, square['x'] + 1, square['y'] - 1) == "p"
+            and board(pos, square['x'] - 1, square['y'] - 1) == "p"):
+            return 0
 
     for ix in range(-2, 3):
         for iy in range(-2, 3):
-            if board(pos, square['x'] + ix, square['y'] + iy) == "k" and (
-                    (-1 <= ix <= 1 or square['x'] + ix in [0, 7]) and (-1 <= iy <= 1 or square['y'] + iy in [0, 7])):
+            if (board(pos, square['x'] + ix, square['y'] + iy) == "k"
+                and ((-1 <= ix <= 1 or square['x'] + ix in [0, 7])
+                     and (-1 <= iy <= 1 or square['y'] + iy in [0, 7]))):
                 return 1
     return 0
 

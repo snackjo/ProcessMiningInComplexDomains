@@ -100,23 +100,23 @@ def psqt_bonus(pos, square=None, mg=True):
 
 def piece_value_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, piece_value_mg)
+        return sum_function(pos, piece_value_mg, param)
     return piece_value_bonus(pos, square, True)
 
 
 def piece_value_eg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, piece_value_eg)
+        return sum_function(pos, piece_value_eg, param)
     return piece_value_bonus(pos, square, False)
 
 
 def psqt_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, psqt_mg)
+        return sum_function(pos, psqt_mg, param)
     return psqt_bonus(pos, square, True)
 
 
 def psqt_eg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, psqt_eg)
+        return sum_function(pos, psqt_eg, param)
     return psqt_bonus(pos, square, False)

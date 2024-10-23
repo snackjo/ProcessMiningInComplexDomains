@@ -5,7 +5,7 @@ from Evaluation.king import blockers_for_king
 
 def mobility(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, mobility)
+        return sum_function(pos, mobility, param)
 
     v = 0
     b = board(pos, square['x'], square['y'])
@@ -53,7 +53,7 @@ def mobility_area(pos, square=None, param=None):
 
 def mobility_bonus(pos, square=None, mg=True):
     if square is None:
-        return sum_function(pos, mobility_bonus)
+        return sum_function(pos, mobility_bonus, mg)
 
     bonus = [
         [-62, -53, -12, -4, 3, 13, 22, 28, 33],
@@ -78,11 +78,11 @@ def mobility_bonus(pos, square=None, mg=True):
 
 def mobility_mg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, mobility_mg)
+        return sum_function(pos, mobility_mg, param)
     return mobility_bonus(pos, square, True)
 
 
 def mobility_eg(pos, square=None, param=None):
     if square is None:
-        return sum_function(pos, mobility_eg)
+        return sum_function(pos, mobility_eg, param)
     return mobility_bonus(pos, square, False)
