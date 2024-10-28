@@ -128,7 +128,7 @@ def attack(pos, square=None, param=None):
     return v
 
 
-def queen_attack_diagonal(pos, square, s2=None):
+def queen_attack_diagonal(pos, square=None, s2=None):
     if square is None:
         return sum_function(pos, queen_attack_diagonal)
 

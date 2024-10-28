@@ -1,4 +1,4 @@
-from Evaluation.global_functions import board, rank, sum_function, colorflip
+from Evaluation.global_functions import board, rank, sum_function
 
 
 def isolated(pos, square=None, param=None):
@@ -174,9 +174,10 @@ def doubled_isolated(pos, square=None, param=None):
     return 0
 
 
-def pawns_mg(pos, square=None, param=None):
+def pawns_mg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, pawns_mg, param)
+        func = replacement_func if replacement_func is not None else pawns_mg
+        return sum_function(pos, func, param)
 
     v = 0
     if doubled_isolated(pos, square):
@@ -194,9 +195,10 @@ def pawns_mg(pos, square=None, param=None):
     return v
 
 
-def pawns_eg(pos, square=None, param=None):
+def pawns_eg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, pawns_eg, param)
+        func = replacement_func if replacement_func is not None else pawns_eg
+        return sum_function(pos, func, param)
 
     v = 0
     if doubled_isolated(pos, square):

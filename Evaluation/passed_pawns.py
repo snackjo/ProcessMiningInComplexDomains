@@ -36,9 +36,9 @@ def candidate_passed(pos, square=None, param=None):
         return 0
 
     lever = (board(pos, square['x'] - 1, square['y'] - 1) == "p") + (
-                board(pos, square['x'] + 1, square['y'] - 1) == "p")
+            board(pos, square['x'] + 1, square['y'] - 1) == "p")
     leverpush = (board(pos, square['x'] - 1, square['y'] - 2) == "p") + (
-                board(pos, square['x'] + 1, square['y'] - 2) == "p")
+            board(pos, square['x'] + 1, square['y'] - 2) == "p")
     phalanx = (board(pos, square['x'] - 1, square['y']) == "P") + (board(pos, square['x'] + 1, square['y']) == "P")
 
     if lever - supported(pos, square) > 1:
@@ -160,9 +160,10 @@ def passed_leverable(pos, square=None, param=None):
     return 0
 
 
-def passed_mg(pos, square=None, param=None):
+def passed_mg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, passed_mg, param)
+        func = replacement_func if replacement_func is not None else passed_mg
+        return sum_function(pos, func, param)
 
     if not passed_leverable(pos, square):
         return 0
@@ -175,9 +176,10 @@ def passed_mg(pos, square=None, param=None):
     return v
 
 
-def passed_eg(pos, square=None, param=None):
+def passed_eg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, passed_eg)
+        func = replacement_func if replacement_func is not None else passed_eg
+        return sum_function(pos, func)
 
     if not passed_leverable(pos, square):
         return 0

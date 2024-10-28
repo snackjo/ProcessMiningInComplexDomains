@@ -73,7 +73,8 @@ def colorflip(position):
 
 
 
-
+def zero(*args):
+    return 0
 
 
 # Function to sum the result of applying a function to each board square
@@ -163,7 +164,7 @@ def blockers_for_king(position, square=None, param=None):
 '''Attack'''
 
 
-def pinned_direction(position, square):
+def pinned_direction(position, square=None):
     if square is None:
         return sum_function(position, pinned_direction)
 
@@ -180,16 +181,12 @@ def pinned_direction(position, square):
         ix = (i + (i > 3)) % 3 - 1
         iy = int((i + (i > 3)) / 3) - 1
         king = False
-
-        # Check direction from piece towards the king
         for d in range(1, 8):
             b = board(position, square['x'] + d * ix, square['y'] + d * iy)
             if b == "K":
                 king = True
             if b != "-":
                 break
-
-        # If there's a king in line, check the opposite direction for attackers
         if king:
             for d in range(1, 8):
                 b = board(position, square['x'] - d * ix, square['y'] - d * iy)
@@ -199,6 +196,4 @@ def pinned_direction(position, square):
                     return abs(ix + iy * 3) * color
                 if b != "-":
                     break
-
     return 0
-

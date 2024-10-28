@@ -329,9 +329,10 @@ def queen_infiltration(pos, square=None, param=None):
     return 1
 
 
-def pieces_mg(pos, square=None, param=None):
+def pieces_mg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, pieces_mg, param)
+        func = replacement_func if replacement_func is not None else pieces_mg
+        return sum_function(pos, func, param)
 
     if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
@@ -354,9 +355,10 @@ def pieces_mg(pos, square=None, param=None):
     return v
 
 
-def pieces_eg(pos, square=None, param=None):
+def pieces_eg(pos, square=None, param=None, replacement_func=None):
     if square is None:
-        return sum_function(pos, pieces_eg, param)
+        func = replacement_func if replacement_func is not None else pieces_eg
+        return sum_function(pos, func, param)
 
     if "NBRQ".find(board(pos, square['x'], square['y'])) < 0:
         return 0
