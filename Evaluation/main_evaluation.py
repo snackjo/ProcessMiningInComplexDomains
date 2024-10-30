@@ -29,10 +29,8 @@ def main_evaluation(mg=None, eg=None, pos=None, *args):
     if len(args) != 0 and args[0] == "main":
         v = int(v / 16) * 16
 
-    # Add tempo adjustment
     v += tempo(pos)
 
-    # Apply rule50 modification
     v = int(v * (100 - rule50) / 100)
 
     return v

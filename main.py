@@ -4,6 +4,7 @@ games_pgn = chess_api_hikaru.get_games()
 print(games_pgn)
 """
 import inspect
+import pandas as pd
 import re
 import time
 from typing import Any
@@ -27,7 +28,36 @@ from Evaluation.pieces import *
 from Evaluation.space import *
 from Evaluation.threats import *
 from helpers import get_data_object
+import pm4py
+import pandas as pd
+from pm4py.objects.log.util import dataframe_utils
+from pm4py.objects.conversion.log import converter as log_converter
+from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
+from pm4py.visualization.heuristics_net import visualizer as hn_visualizer
 
+def process_game(game, case_id, data):
+    # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
+    print(f"Processing Game {case_id}")
+    current_board = game.board()
+    item_sums, group_list = run_and_get_grouplist(game, current_board, data)
+    elem_list = [entry['elem'] for entry in group_list]
+
+    game_events = []
+
+    for i, item in enumerate(item_sums, start=1):
+        prev = (i - 1) * 4
+        cur = i * 4
+        largest_three = sorted(zip(item, elem_list), reverse=True)[:3]
+
+        activities = ", ".join([biggest[1] for biggest in largest_three])
+
+        game_events.append({
+            'Case ID': f'case_{case_id}',
+            'Timestamp': f'move_{prev}-{cur}',
+            'Activity': activities
+        })
+
+    return game_events
 
 def call_with_param(func, position):
     sig = inspect.signature(func)
@@ -83,7 +113,7 @@ def get_group_list(position, data):
             list_items.append(n)
 
         for n2 in list_items:
-            if f"g-{n2}(" not in code:
+            if f"g-{n2}(" not in code and n2 != 'space':
                 continue
 
             try:
@@ -159,15 +189,42 @@ def debug_at_move(game, current_board, engine, move_num) -> None:
     print(f"Engine score: {info['score'].white()}")
 
 
-def run_and_get_grouplist(game, current_board):
-    all_groups = []
-    data = get_data_object()
-    for move in game.mainline_moves():
-        move_num, color = get_move_num_and_color(current_board)
+def run_and_get_grouplist(game, current_board, data):
+    # all_groups = []
+    item_sums = []
+    recent_items = []
+    item_length = 50
+    group_list = []
+    for move_num, move in enumerate(game.mainline_moves(), start=1):
         is_captured: bool = current_board.is_capture(move)
         current_board.push(move)
-        all_groups.append(get_group_list(board_to_position(current_board), data))
-    return all_groups
+
+        if not is_captured:
+            group_list = get_group_list(board_to_position(current_board), data)
+            # all_groups.append(group_list)
+            item_third_elements = [{group['elem']: group['item'][2]} for group in group_list]
+            recent_items.append(item_third_elements)
+            item_length = len(item_third_elements)
+
+        if move_num % 4 == 0:
+            add_items(item_length, item_sums, recent_items)
+
+    add_items(item_length, item_sums, recent_items)
+
+    return item_sums, group_list
+
+
+def add_items(item_length, item_sums, recent_items):
+    if recent_items:
+        elem_sum = [0] * len(recent_items[0])
+        for item in recent_items:
+            for i, elem in enumerate(item):
+                elem_sum[i] += list(elem.values())[0]
+
+        item_sums.append([sum_value / len(recent_items) for sum_value in elem_sum])
+        recent_items.clear()
+    else:
+        item_sums.append([0] * item_length)
 
 
 def run_and_evaluate_game(game, current_board) -> list[tuple[int, Any, int, int, int, bool]]:
@@ -213,16 +270,35 @@ def run_and_evaluate_game_sf(game, current_board, engine, depth) -> list[tuple[i
 
     return largest_changes
 
+def generate_event_log():
+    data = get_data_object()
+    event_log = []
+    pgn_path = "Games/RuyLopezChigorin2019.pgn"
+    with open(pgn_path) as pgn:
+        case_id = 1
+        while True:
+            game = chess.pgn.read_game(pgn)
+            if game is None or case_id == 300:
+                break
+            start = time.time()
+            game_events = process_game(game, case_id, data)
+            event_log.extend(game_events)
+            end = time.time()
+            print(end - start)
+
+            case_id += 1
+    event_log_df = pd.DataFrame(event_log)
+    event_log_df.to_csv('event_log.csv', index=False)
 
 def main() -> None:
-    engine = chess.engine.SimpleEngine.popen_uci(
-        r"C:\Users\carlj\Documents\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe")
+    # engine = chess.engine.SimpleEngine.popen_uci(
+    #     r"C:\Users\carlj\Documents\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe")
 
     # pgn = open("Games/ruy_lopez_chigorin_variation_adams_vs_kasimdzhanov.pgn")
-    pgn = open("Games/game_2.pgn")
 
-    game = chess.pgn.read_game(pgn)
-    current_board = game.board()
+
+    # game = chess.pgn.read_game(pgn)
+    # current_board = game.board()
 
     # largest_changes = run_and_evaluate_game_sf()
 
@@ -233,12 +309,52 @@ def main() -> None:
     #         f"Move: {move_num}{' W' if color else ' B'} {move}, Change: {change}, From: {prev_score} -> {overall_score}")
 
     # debug_at_move(game, board, engine, 53)
-    sliced_moves = get_sliced_moves(game, 53)
-    for move in sliced_moves:
-        current_board.push(move)
-    get_group_list(board_to_position(current_board), get_data_object())
+    # sliced_moves = get_sliced_moves(game, 53)
+    # for move in sliced_moves:
+    #     current_board.push(move)
+    # get_group_list(board_to_position(current_board), get_data_object())
 
-    engine.quit()
+    # for i, item in enumerate(item_sums, start=1):
+    #     prev = (i - 1) * 3
+    #     cur = i * 3
+    #     largest_three = sorted(zip(item, elem_list), reverse=True)[:3]
+    #
+    #     activities = ", ".join([biggest[1] for biggest in largest_three])
+    #     event_log.append({
+    #         'Case ID': 'Case 1',
+    #         'Timestamp': f'Move {prev} -> {cur}',
+    #         'Activity': activities
+    #     })
+    #     print(f"Max for moves {prev} -> {cur} is")
+    #     for biggest in largest_three:
+    #         print(f"{biggest[1]} with value {biggest[0]}")
+    #     print("\n")
+    #
+    # event_log_df = pd.DataFrame(event_log)
+
+    # generate_event_log()
+    # engine.quit()
+    mine_log()
+
+
+def mine_log():
+    df = pd.read_csv("event_log.csv")
+    df.rename(columns={
+        "Case ID": "case:concept:name",
+        "Timestamp": "time:timestamp",
+        "Activity": "concept:name"
+    }, inplace=True)
+    df = dataframe_utils.convert_timestamp_columns_in_df(df)
+    event_log = log_converter.apply(df)
+    heu_net = heuristics_miner.apply_heu(event_log, parameters={
+        heuristics_miner.Variants.CLASSIC.value.Parameters.DEPENDENCY_THRESH: 0.9,
+        heuristics_miner.Variants.CLASSIC.value.Parameters.MIN_ACT_COUNT: 5,
+        heuristics_miner.Variants.CLASSIC.value.Parameters.MIN_DFG_OCCURRENCES: 5
+    })
+    print(heu_net)
+    gviz = hn_visualizer.apply(heu_net)
+    print("done2")
+    hn_visualizer.view(gviz)
 
 
 if __name__ == '__main__':

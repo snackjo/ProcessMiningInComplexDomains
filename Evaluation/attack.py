@@ -134,25 +134,20 @@ def queen_attack_diagonal(pos, square=None, s2=None):
 
     v = 0
 
-    # Iterate through 8 possible diagonal directions
     for i in range(8):
         ix = (i + (i > 3)) % 3 - 1
         iy = int((i + (i > 3)) / 3) - 1
 
-        # Skip non-diagonal directions (ix or iy being zero)
         if ix == 0 or iy == 0:
             continue
 
-        # Check each direction for up to 7 squares (queen's range diagonally)
         for d in range(1, 8):
             b = board(pos, square['x'] + d * ix, square['y'] + d * iy)
 
-            # If we find a queen and either no second square (s2) is specified or it's the correct target square
             if (b == "Q"
                     and (s2 is None or (s2['x'] == square['x'] + d * ix and s2['y'] == square['y'] + d * iy))):
                 direction = pinned_direction(pos, {'x': square['x'] + d * ix, 'y': square['y'] + d * iy})
 
-                # Check if the direction is not pinned or the pin allows movement in this direction
                 if direction == 0 or abs(ix + iy * 3) == direction:
                     v += 1
             if b != "-":
