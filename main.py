@@ -35,6 +35,7 @@ from pm4py.objects.conversion.log import converter as log_converter
 from pm4py.algo.discovery.heuristics import algorithm as heuristics_miner
 from pm4py.visualization.heuristics_net import visualizer as hn_visualizer
 
+
 def process_game(game, case_id, data):
     # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
     print(f"Processing Game {case_id}")
@@ -58,6 +59,7 @@ def process_game(game, case_id, data):
         })
 
     return game_events
+
 
 def call_with_param(func, position):
     sig = inspect.signature(func)
@@ -123,7 +125,6 @@ def get_group_list(position, data):
                 local_vars = {"zero": zero, "colorflip": colorflip, "sum_function": sum_function}
                 exec(eval_code, globals(), local_vars)
                 eval_func = local_vars.get("eval_func")
-
 
                 mw, mb, ew, eb = 0, 0, 0, 0
                 if f"{n}(pos" in data[midindex]['code']:
@@ -270,6 +271,7 @@ def run_and_evaluate_game_sf(game, current_board, engine, depth) -> list[tuple[i
 
     return largest_changes
 
+
 def generate_event_log():
     data = get_data_object()
     event_log = []
@@ -290,51 +292,23 @@ def generate_event_log():
     event_log_df = pd.DataFrame(event_log)
     event_log_df.to_csv('event_log.csv', index=False)
 
-def main() -> None:
-    # engine = chess.engine.SimpleEngine.popen_uci(
-    #     r"C:\Users\carlj\Documents\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe")
 
-    # pgn = open("Games/ruy_lopez_chigorin_variation_adams_vs_kasimdzhanov.pgn")
+def print_largest_changes():
+    engine = get_engine()
+    pgn = open("Games/game_1.pgn")
+    game = chess.pgn.read_game(pgn)
+    current_board = game.board()
+    largest_changes = run_and_evaluate_game_sf(game, current_board, engine, 14)
+    print("\n")
+    for move_num, move, change, prev_score, overall_score, color in largest_changes:
+        print(
+            f"Move: {move_num}{' W' if color else ' B'} {move}, Change: {change}, From: {prev_score} -> {overall_score}")
+    engine.quit()
 
 
-    # game = chess.pgn.read_game(pgn)
-    # current_board = game.board()
-
-    # largest_changes = run_and_evaluate_game_sf()
-
-    # largest_changes = run_and_evaluate_game(game, board)
-    # print("\n")
-    # for move_num, move, change, prev_score, overall_score, color in largest_changes:
-    #     print(
-    #         f"Move: {move_num}{' W' if color else ' B'} {move}, Change: {change}, From: {prev_score} -> {overall_score}")
-
-    # debug_at_move(game, board, engine, 53)
-    # sliced_moves = get_sliced_moves(game, 53)
-    # for move in sliced_moves:
-    #     current_board.push(move)
-    # get_group_list(board_to_position(current_board), get_data_object())
-
-    # for i, item in enumerate(item_sums, start=1):
-    #     prev = (i - 1) * 3
-    #     cur = i * 3
-    #     largest_three = sorted(zip(item, elem_list), reverse=True)[:3]
-    #
-    #     activities = ", ".join([biggest[1] for biggest in largest_three])
-    #     event_log.append({
-    #         'Case ID': 'Case 1',
-    #         'Timestamp': f'Move {prev} -> {cur}',
-    #         'Activity': activities
-    #     })
-    #     print(f"Max for moves {prev} -> {cur} is")
-    #     for biggest in largest_three:
-    #         print(f"{biggest[1]} with value {biggest[0]}")
-    #     print("\n")
-    #
-    # event_log_df = pd.DataFrame(event_log)
-
-    # generate_event_log()
-    # engine.quit()
-    mine_log()
+def get_engine():
+    return chess.engine.SimpleEngine.popen_uci(
+        r"C:\Users\carlj\Documents\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe")
 
 
 def mine_log():
@@ -353,8 +327,17 @@ def mine_log():
     })
     print(heu_net)
     gviz = hn_visualizer.apply(heu_net)
-    print("done2")
     hn_visualizer.view(gviz)
+
+
+def main() -> None:
+    print_largest_changes()
+
+    # debug_at_move(game, board, engine, 53)
+
+    # generate_event_log()
+
+    # mine_log()
 
 
 if __name__ == '__main__':
