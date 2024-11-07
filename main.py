@@ -40,7 +40,7 @@ def process_game(game, case_id, data):
     # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
     print(f"Processing Game {case_id}")
     current_board = game.board()
-    item_sums, group_list = run_and_get_grouplist(game, current_board, data)
+    item_sums, group_list = get_item_sums_and_group_list(game, current_board, data)
     elem_list = [entry['elem'] for entry in group_list]
 
     game_events = []
@@ -190,7 +190,7 @@ def debug_at_move(game, current_board, engine, move_num) -> None:
     print(f"Engine score: {info['score'].white()}")
 
 
-def run_and_get_grouplist(game, current_board, data):
+def get_item_sums_and_group_list(game, current_board, data):
     # all_groups = []
     item_sums = []
     recent_items = []
@@ -331,13 +331,13 @@ def mine_log():
 
 
 def main() -> None:
-    print_largest_changes()
+    # print_largest_changes()
 
     # debug_at_move(game, board, engine, 53)
 
-    # generate_event_log()
+    generate_event_log()
 
-    # mine_log()
+    mine_log()
 
 
 if __name__ == '__main__':
