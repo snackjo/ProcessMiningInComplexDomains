@@ -457,6 +457,16 @@ def king_danger(pos):
 
     return v if v > 100 else 0
 
+def king_mg_king_danger(pos):
+    v = 0
+    kd = king_danger(pos)
+    v += int(kd * kd / 4096)
+    return v
+
+def king_eg_king_danger(pos):
+    v = 0
+    v += int((king_danger(pos) / 16))
+    return v
 
 def king_mg(pos):
     v = 0

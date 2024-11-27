@@ -35,6 +35,13 @@ def main_evaluation(mg=None, eg=None, pos=None, *args):
 
     return v
 
+def main_evaluation_king_danger(mg=None, eg=None, pos=None, *args):
+    if mg is None:
+        mg = middle_game_evaluation(pos)
+    if eg is None:
+        eg = end_game_evaluation(pos)
+
+
 
 def middle_game_evaluation(pos, nowinnable=False):
     v = 0

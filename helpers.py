@@ -1793,3 +1793,192 @@ def get_data_object():
             "elo": None
         }
     ]
+
+def get_king_data_object():
+    return [
+        {
+            "name": "Middle game evaluation",
+            "group": "",
+            "text": "<b>$</b>. Evaluates position for the middlegame and the opening phases.",
+            "code": "def middle_game_evaluation(pos, nowinnable=False):\n    v = 0\n    v += piece_value_mg(pos) - piece_value_mg(colorflip(pos))\n    v += psqt_mg(pos) - psqt_mg(colorflip(pos))\n    v += imbalance_total(pos)\n    v += pawns_mg(pos) - pawns_mg(colorflip(pos))\n    v += pieces_mg(pos) - pieces_mg(colorflip(pos))\n    v += mobility_mg(pos) - mobility_mg(colorflip(pos))\n    v += threats_mg(pos) - threats_mg(colorflip(pos))\n    v += passed_mg(pos) - passed_mg(colorflip(pos))\n    v += space(pos) - space(colorflip(pos))\n    v += king_mg(pos) - king_mg(colorflip(pos))\n    if not nowinnable:\n        v += winnable_total_mg(pos, v)\n    return v",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": False,
+            "graph": False,
+            "elo": None
+        },
+        {
+            "name": "End game evaluation",
+            "group": "",
+            "text": "<b>$</b>. Evaluates position for the endgame phase.",
+            "code": "def end_game_evaluation(pos, nowinnable=False):\n    v = 0\n    v += piece_value_eg(pos) - piece_value_eg(colorflip(pos))\n    v += psqt_eg(pos) - psqt_eg(colorflip(pos))\n    v += imbalance_total(pos)\n    v += pawns_eg(pos) - pawns_eg(colorflip(pos))\n    v += pieces_eg(pos) - pieces_eg(colorflip(pos))\n    v += mobility_eg(pos) - mobility_eg(colorflip(pos))\n    v += threats_eg(pos) - threats_eg(colorflip(pos))\n    v += passed_eg(pos) - passed_eg(colorflip(pos))\n    v += king_eg(pos) - king_eg(colorflip(pos))\n    if not nowinnable:\n        v += winnable_total_eg(pos, v)\n    return v",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": False,
+            "graph": False,
+            "elo": None
+        },
+        {
+            "name": "King danger",
+            "group": "King",
+            "text": "<b>$</b>. The initial value is based on the number and types of the enemy's attacking pieces, the number of attacked and undefended squares around our king and the quality of the pawn shelter.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": True,
+            "graph": True,
+            "elo": None
+        },
+        {
+            "name": "Main evaluation",
+            "group": "",
+            "text": "<b>$</b>. An evaluation function is used to heuristically determine the relative value of a positions used in general case when no specialized evaluation or tablebase evaluation is available. In Stockfish it is never applied for positions where king of either side is in check. Resulting value is computed by combining [[Middle game evaluation]] and [[End game evaluation]]. We use <a class=\"external\" href=\"https://www.chessprogramming.org/Tapered_Eval\">Tapered Eval</a>, a technique used in evaluation to make a smooth transition between the phases of the game. [[Phase]] is a coeficient of simple linear combination. Before using  [[End game evaluation]] in this formula we also scale it down using [[Scale factor]].",
+            "code": "def main_evaluation(mg=None, eg=None, pos=None, *args):\n    if mg is None:\n        mg = middle_game_evaluation(pos)\n    if eg is None:\n        eg = end_game_evaluation(pos)\n    p = phase(pos)\n    rule50 = rule_50(pos)\n    scale = scale_factor(pos, eg) / 64\n    eg = eg * scale\n    v = (mg * p + (eg * (128 - p))) // 128\n    if mg is None or eg is None:\n        v = (v // 16) * 16\n    \n    v += tempo(pos)\n    \n    v = (v * (100 - rule50)) // 100\n    return v",
+            "links": [
+                [
+                    "https://www.chessprogramming.org/Evaluation",
+                    "Evaluation in cpw"
+                ],
+                [
+                    "https://www.chessprogramming.org/Tapered_Eval",
+                    "Tapered Eval in cpw"
+                ],
+                [
+                    "https://www.chessprogramming.org/Game_Phases",
+                    "Game Phases in cpw"
+                ],
+                [
+                    "https://www.chessprogramming.org/Tempo",
+                    "Tempo in cpw"
+                ]
+            ],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": False,
+            "graph": False,
+            "elo": None
+        },
+        {
+            "name": "King mg",
+            "group": "King",
+            "text": "<b>$</b> assigns middlegame bonuses and penalties for attacks on enemy king.",
+            "code": "def eval_func(pos):\n    v = 0\n    kd = king_danger(pos)\n    v -= shelter_strength(pos)\n    v += shelter_storm(pos)\n    v += int(kd * kd / 4096)\n    v += 8 * flank_attack(pos)\n    v += 17 * pawnless_flank(pos)\n    return v",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": True,
+            "graph": False,
+            "elo": None
+        },
+        {
+            "name": "King eg",
+            "group": "King",
+            "text": "<b>$</b> assigns endgame bonuses and penalties for attacks on enemy king.",
+            "code": "def eval_func(pos):\n    v = 0\n    v -= 16 * king_pawn_distance(pos)\n    v += endgame_shelter(pos)\n    v += 95 * pawnless_flank(pos)\n    v += int((king_danger(pos) / 16))\n    return v",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": True,
+            "graph": False,
+            "elo": None
+        },
+        {
+            "name": "Shelter strength",
+            "group": "King",
+            "text": "<b>$</b>. King shelter bonus for king position. If we can castle use the penalty after the castling if ([[Shelter strength]] + [[Shelter storm]]) is smaller.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 2,
+            "forwhite": True,
+            "graph": True,
+            "elo": None
+        },
+        {
+            "name": "Shelter storm",
+            "group": "King",
+            "text": "<b>$</b>. Shelter strom penalty for king position. If we can castle use the penalty after the castling if ([[Shelter weakness]] + [[Shelter storm]]) is smaller.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 2,
+            "forwhite": True,
+            "graph": True,
+            "elo": None
+        },
+        {
+            "name": "Flank attack",
+            "group": "King",
+            "text": "<b>$</b>. Find the squares that opponent attacks in our king flank and the squares which they attack twice in that flank.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 1,
+            "highlight": 0,
+            "forwhite": True,
+            "graph": True,
+            "elo": {
+                "value": "2.19",
+                "error": "4.6",
+                "link": "http://tests.stockfishchess.org/tests/view/5a7399f10ebc5902971a96b3"
+            }
+        },
+        {
+            "name": "Pawnless flank",
+            "group": "King",
+            "text": "<b>$</b>. Penalty when our king is on a pawnless flank.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 0,
+            "forwhite": True,
+            "graph": True,
+            "elo": {
+                "value": "1.29",
+                "error": "4.5",
+                "link": "http://tests.stockfishchess.org/tests/view/5a73a7000ebc5902971a96b6"
+            }
+        },
+        {
+            "name": "King pawn distance",
+            "group": "King",
+            "text": "<b>$</b>. Minimal distance of our king to our pawns.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 2,
+            "forwhite": True,
+            "graph": True,
+            "elo": {
+                "value": "3.71",
+                "error": "4.2",
+                "link": "http://tests.stockfishchess.org/tests/view/5a7dacfd0ebc5902971a9bc3"
+            }
+        },
+        {
+            "name": "Endgame shelter",
+            "group": "King",
+            "text": "<b>$</b>. Add an endgame component to the blockedstorm penalty so that the penalty applies more uniformly through the game.",
+            "code": "",
+            "links": [],
+            "eval": True,
+            "squares": 0,
+            "highlight": 2,
+            "forwhite": True,
+            "graph": True,
+            "elo": None
+        }
+    ]
