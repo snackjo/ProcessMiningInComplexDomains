@@ -1,8 +1,3 @@
-"""from HttpRequests.chess_api import ChessAPI
-chess_api_hikaru = ChessAPI("hikaru", "2018", "01")
-games_pgn = chess_api_hikaru.get_games()
-print(games_pgn)
-"""
 
 from functions import *
 
@@ -11,10 +6,13 @@ def main() -> None:
     # print_largest_changes()
 
     # debug_at_move(game, board, engine, 53)
-
-    generate_event_log()
+    player_name = "MagnusCarlsen"
+    year = "2024"
+    month = "10"
+    # get_games_of_player(player_name="MagnusCarlsen", year="2024", month="09", output_file="MagnusCarlsen_games_2024_09.pgn")
+    generate_event_log(f"Games/{player_name}_games_{year}_{month}.pgn", player_name, "event_log_MagnusCarlsen_games_2024_10.xes")
     # start = time.time()
-    # generate_fine_grained_event_log(None, "Games/4000_italian_game_two_knights_defense_knight_attack.pgn")
+    # generate_fine_grained_event_log(None, "Games/1400_italian_game_two_knights_defense_knight_attack.pgn")
     # end = time.time()
     # print(f"Elapsed time: {end - start}")
 
