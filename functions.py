@@ -38,13 +38,38 @@ from pm4py.objects.log.obj import EventLog, Trace, Event
 from pm4py.objects.log.exporter.xes import exporter as xes_exporter
 from pm4py.util.xes_constants import DEFAULT_NAME_KEY
 from datetime import datetime, timedelta
+from HttpRequests.chess_api import ChessAPI
+from pm4py.objects.log.importer.xes import importer as xes_importer
+
+def get_games_of_player(player_name: str = "hikaru", year: str = "2018", month: str = "01", output_file: str = "games.pgn"):
+    chess_api = ChessAPI(player_name, year, month)
+    games_pgn = chess_api.get_games()
+    # print(games_pgn)
+    if games_pgn:
+        try:
+            with open(output_file, "w", encoding="utf-8") as file:
+                file.write(games_pgn)
+            print(f"Games saved to {output_file}")
+        except IOError as e:
+            print(f"Error saving games to file: {e}")
 
 
-def process_game(game, case_id, data):
+def process_game(game, case_id, data, playername: str):
     # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
+    result = game.headers['Result']
+    ending = None
+    if result == '1-0':
+        outcome = 'White won'
+    elif result == '0-1':
+        outcome = 'Black won'
+    else:
+        outcome = 'Draw'
     print(f"Processing Game {case_id}")
     current_board = game.board()
-    item_sums, group_list = get_item_sums_and_group_list(game, current_board, data)
+    color = "white"
+    if game.headers["Black"] == playername:
+        color = "black"
+    item_sums, group_list = get_item_sums_and_group_list(game, current_board, data, color)
     elem_list = [entry['elem'] for entry in group_list]
 
     game_events = []
@@ -54,15 +79,28 @@ def process_game(game, case_id, data):
         cur = i * 4
         largest_three = sorted(zip(item, elem_list), reverse=True)[:3]
 
-        activities = ", ".join([biggest[1] for biggest in largest_three])
+        activity = max(zip(item, elem_list), key=lambda x: x[0])
+        if color == "black":
+            activity = min(zip(item, elem_list), key=lambda x: x[0])
 
-        game_events.append({
-            'Case ID': f'case_{case_id}',
-            'Timestamp': f'move_{prev}-{cur}',
-            'Activity': activities
-        })
+        # activities = ", ".join([biggest[1] for biggest in largest_three])
+        activity_name = activity[1]
+        if activity[0] != 0:
+            game_events.append({
+                # 'Case ID': f'case_{case_id}',
+                # 'Timestamp': f'move_{prev}-{cur}',
+                # 'Activity': activities
+                # 'Timestamp': f'move_{i}',
+                'Timestamp': f'{datetime(i, 1, 1, 12, 0)}',
+                'Activity': activity_name
+            })
+    if outcome != 'Draw':
+        if current_board.is_checkmate():
+            ending = "Checkmate"
+        else:
+            ending = "Time/Forfeit"
 
-    return game_events
+    return outcome, ending, game_events
 
 
 def call_with_param(func, position):
@@ -197,12 +235,15 @@ def debug_at_move(game, current_board, engine, move_num) -> None:
     print(f"Engine score: {info['score'].white()}")
 
 
-def get_item_sums_and_group_list(game, current_board, data):
+def get_item_sums_and_group_list(game, current_board, data, color):
     # all_groups = []
     item_sums = []
     recent_items = []
     item_length = 50
     group_list = []
+    remainder = 0
+    if color == "white":
+        remainder = 1
     for move_num, move in enumerate(game.mainline_moves(), start=1):
         is_captured: bool = current_board.is_capture(move)
         current_board.push(move)
@@ -214,10 +255,10 @@ def get_item_sums_and_group_list(game, current_board, data):
             recent_items.append(item_third_elements)
             item_length = len(item_third_elements)
 
-        if move_num % 4 == 0:
-            add_items(item_length, item_sums, recent_items)
+        # if move_num % 4 == 0:
+        add_items(item_length, item_sums, recent_items)
 
-    add_items(item_length, item_sums, recent_items)
+    # add_items(item_length, item_sums, recent_items)
 
     return item_sums, group_list
 
@@ -279,26 +320,60 @@ def run_and_evaluate_game_sf(game, current_board, engine, depth) -> list[tuple[i
     return largest_changes
 
 
-def generate_event_log():
+def generate_event_log(pgn_path = "Games/filtered_games.pgn", player_name: str = None, existing_xes_path = None):
+    output_path = "event_log_" + pgn_path[pgn_path.find("/") + 1:].replace(".pgn", ".xes")
     data = get_data_object()
-    event_log = []
-    pgn_path = "Games/filtered_games.pgn"
+
+    if existing_xes_path is None:
+        print("No existing XES file path provided. Creating a new event log.")
+        event_log = EventLog()
+    else:
+        try:
+            event_log = xes_importer.apply(existing_xes_path)
+            print(f"Loaded existing event log with {len(event_log)} traces.")
+        except FileNotFoundError:
+            print(f"File {existing_xes_path} not found. Creating a new event log.")
+            event_log = EventLog()
+
+    eco_mapping = get_eco_mapping()
+
     with open(pgn_path) as pgn:
-        case_id = 1
+        case_id = len(event_log) + 1
         while True:
             game = chess.pgn.read_game(pgn)
-            if game is None or case_id == 300:
+            if game is None:
                 break
+
             start = time.time()
-            game_events = process_game(game, case_id, data)
-            event_log.extend(game_events)
+            outcome, ending, game_events = process_game(game, case_id, data, player_name)
+
+            trace = Trace()
+            trace.attributes["concept:name"] = f'case_{case_id}'
+            trace.attributes["outcome"] = outcome
+            if game.headers["White"] and game.headers["Black"]: trace.attributes["players"] = (game.headers["White"] +" vs. " + game.headers["Black"])
+            if ending: trace.attributes["ending"] = ending
+            if game.headers["White"] and game.headers["White"] == player_name:
+                trace.attributes["player_color"] = "White"
+            elif game.headers["Black"] and game.headers["Black"] == player_name:
+                trace.attributes["player_color"] = "Black"
+            for event in game_events:
+                trace.append(Event({
+                    "concept:name": event["Activity"],
+                    "time:timestamp": event["Timestamp"],
+                    # "case:concept:name": event["Case ID"]
+                }))
+            eco = game.headers['ECO']
+            if eco:
+                aggregated_eco = aggregate_eco(eco_mapping, eco)
+                trace.attributes["eco"] = eco
+                trace.attributes["aggregated_eco"] = aggregated_eco
+            event_log.append(trace)
+
             end = time.time()
-            print(end - start)
-
+            print(f"Processed Game {case_id} in {end - start:.2f} seconds")
             case_id += 1
-    event_log_df = pd.DataFrame(event_log)
-    event_log_df.to_csv('event_log.csv', index=False)
 
+    xes_exporter.apply(event_log, output_path)
 
 def print_largest_changes():
     engine = get_engine()
@@ -627,7 +702,6 @@ def aggregate_endgame(classification):
     else:
         w_light = w_dark = b_light = b_dark = 0
 
-    # Check classifications
     if classify_symmetric(white_count, black_count, is_rook_vs_rook):
         return "rook versus rook"
 
@@ -915,7 +989,6 @@ def generate_coarse_event_log_xes(csv_path=None, pgn_path="Games/filtered_games.
             event_log.append(trace)
             case_id += 1
 
-    # Export to XES
     xes_exporter.apply(event_log, output_path)
     engine.quit()
 
