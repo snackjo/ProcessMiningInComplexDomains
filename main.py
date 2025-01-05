@@ -34,7 +34,8 @@ def main() -> None:
     # generate_theme_log("sample_puzzles_2_0_1400.csv")
     # extract_sample_from_csv()
 
-    generate_puzzle_move_log("sample_puzzles_1000_after_5000.csv", None, True)
+    # generate_puzzle_move_log("sample_puzzles_1000_after_5000.csv", None, True)
+    generate_puzzle_move_log_extra_traces("Puzzles/sample_puzzles_1000_after_5000.csv", None, True)
 
 if __name__ == '__main__':
     main()

@@ -44,6 +44,134 @@ import zstandard as zstd
 
 from tagger_module.mytagger import cook_positions
 from tagger_module.tagger import read
+import copy
+
+def generate_puzzle_move_log_extra_traces(file_path = 'sample_puzzles.csv', existing_xes_path = None, without_piece_bonus = False):
+    puzzles = pd.read_csv(file_path)
+    game_objects = []
+    for _, row in puzzles.iterrows():
+        fen = row['FEN']
+        moves_str = row['Moves']
+        game = create_game_from_fen_and_moves(fen, moves_str)
+        position_tags = cook_positions(read({
+            "_id": row["PuzzleId"],
+            "fen": row["FEN"],
+            "line": row["Moves"],
+            "cp": 999999998
+        }))
+        game.headers["PuzzleId"] = row['PuzzleId']
+        game.headers["Rating"] = str(row['Rating'])
+        game.headers["Themes"] = row['Themes']
+        game.headers["GameUrl"] = row['GameUrl']
+
+        game_objects.append((position_tags, game))
+
+    output_path = "event_log_" + file_path.replace(".csv", ".xes")
+    data = get_data_object()
+
+    if existing_xes_path is None:
+        print("No existing XES file path provided. Creating a new event log.")
+        event_log = EventLog()
+    else:
+        try:
+            event_log = xes_importer.apply(existing_xes_path)
+            print(f"Loaded existing event log with {len(event_log)} traces.")
+        except FileNotFoundError:
+            print(f"File {existing_xes_path} not found. Creating a new event log.")
+            event_log = EventLog()
+    case_id = len(event_log) + 1
+
+    for position_tags, game in game_objects:
+        start = time.time()
+        result = []
+
+        if position_tags:
+            for move_to_find, type_of_move in position_tags:
+                index = -1
+                for i, move in enumerate(game.mainline_moves()):
+                    if move == move_to_find:
+                        index = i
+                        break
+                if index != -1:
+                    result.append((index, type_of_move))
+
+        print(result)
+        if not result:
+            end = time.time()
+            print(f"Continuing Game {case_id} in {end - start:.2f} seconds")
+            continue
+
+        if without_piece_bonus:
+            game_events = process_puzzle_without_piece_bonus(game, case_id, data)
+        else:
+            game_events = process_puzzle(game, case_id, data)
+
+        # Initialize a list of traces to handle splitting
+        traces = [Trace()]
+        traces[0].attributes["concept:name"] = f'case_{case_id}'
+        traces[0].attributes["puzzle_id"] = game.headers["PuzzleId"]
+        traces[0].attributes["rating_50"] = round(int(game.headers["Rating"]) / 50) * 50
+        traces[0].attributes["rating_100"] = round(int(game.headers["Rating"]) / 100) * 100
+        traces[0].attributes["rating_200"] = round(int(game.headers["Rating"]) / 200) * 200
+        traces[0].attributes["themes"] = game.headers["Themes"]
+        traces[0].attributes["game_url"] = game.headers["GameUrl"]
+
+
+        end_index = 0
+        for i, event in enumerate(game_events, start=1):
+            if i % 2 == 0:
+                end_index = i
+                moves = [move for idx, move in result if idx == i - 1]
+                if moves:
+                    new_traces = []
+                    for move in moves:
+                        for trace in traces:
+                            new_trace = copy.deepcopy(trace)
+                            if len(moves) > 1:
+                                print(f'move length longer than 1 at case {case_id}')
+                            case_id += 1
+                            new_trace.attributes["concept:name"] = f'case_{case_id}'
+                            new_trace.append(Event({
+                                "concept:name": f"move: {i}, {move}",
+                                "time:timestamp": event["Timestamp"],
+                            }))
+                            new_traces.append(new_trace)
+                    traces = new_traces  # Replace the current traces with the new ones
+            else:
+                for trace in traces:
+                    trace.append(Event({
+                        "concept:name": f"state: {i}, {event['Activity']}",
+                        "time:timestamp": event["Timestamp"],
+                    }))
+                end_index = i
+        end_index += 1
+        if end_index % 2 == 0:
+            moves = [move for idx, move in result if idx == end_index - 1]
+            if moves:
+                new_traces = []
+                for move in moves:
+                    for trace in traces:
+                        new_trace = copy.deepcopy(trace)
+
+
+                        case_id += 1
+                        new_trace.attributes["concept:name"] = f'case_{case_id}'
+                        new_trace.append(Event({
+                            "concept:name": f"move: {end_index}, {move}",
+                        }))
+                        new_traces.append(new_trace)
+                traces = new_traces
+
+        # Add all final traces to the event log
+        for trace in traces:
+            event_log.append(trace)
+
+
+        end = time.time()
+        print(f"Processed Game {case_id} in {end - start:.2f} seconds")
+        case_id += 1
+
+    xes_exporter.apply(event_log, output_path)
 
 
 def generate_puzzle_move_log(file_path = 'sample_puzzles.csv', existing_xes_path = None, without_piece_bonus = False):
@@ -642,7 +770,7 @@ def add_move_to_activities(existing_xes_path = None):
                 event_name = event["concept:name"]
                 event["concept:name"] = f"{move_number}, {event_name}"
 
-    modified_xes_path = "event_log_Hikaru_games_2024_01.xes"
+    modified_xes_path = "EventLogs/event_log_Hikaru_games_2024_01.xes"
     xes_exporter.apply(event_log, modified_xes_path)
 
     print("Event log has been updated and saved.")
