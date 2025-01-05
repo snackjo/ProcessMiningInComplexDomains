@@ -1,7 +1,7 @@
 import inspect
-import pandas as pd
 import re
 import time
+from copy import copy, deepcopy
 from typing import Any
 
 import chess.engine
@@ -40,6 +40,273 @@ from pm4py.util.xes_constants import DEFAULT_NAME_KEY
 from datetime import datetime, timedelta
 from HttpRequests.chess_api import ChessAPI
 from pm4py.objects.log.importer.xes import importer as xes_importer
+import zstandard as zstd
+
+from tagger_module.mytagger import cook_positions
+from tagger_module.tagger import read
+
+
+def generate_puzzle_move_log(file_path = 'sample_puzzles.csv', existing_xes_path = None, without_piece_bonus = False):
+    puzzles = pd.read_csv(file_path)
+    game_objects = []
+    for _, row in puzzles.iterrows():
+        fen = row['FEN']
+        moves_str = row['Moves']
+        game = create_game_from_fen_and_moves(fen, moves_str)
+        position_tags = cook_positions(read({
+            "_id": row["PuzzleId"],
+            "fen": row["FEN"],
+            "line": row["Moves"],
+            "cp": 999999998
+        }))
+        game.headers["PuzzleId"] = row['PuzzleId']
+        game.headers["Rating"] = str(row['Rating'])
+        game.headers["Themes"] = row['Themes']
+        game.headers["GameUrl"] = row['GameUrl']
+
+        game_objects.append((position_tags, game))
+
+    output_path = "event_log_" + file_path.replace(".csv", ".xes")
+    data = get_data_object()
+
+    if existing_xes_path is None:
+        print("No existing XES file path provided. Creating a new event log.")
+        event_log = EventLog()
+    else:
+        try:
+            event_log = xes_importer.apply(existing_xes_path)
+            print(f"Loaded existing event log with {len(event_log)} traces.")
+        except FileNotFoundError:
+            print(f"File {existing_xes_path} not found. Creating a new event log.")
+            event_log = EventLog()
+    case_id = len(event_log) + 1
+
+    for position_tags, game in game_objects:
+        start = time.time()
+        if without_piece_bonus:
+            game_events = process_puzzle_without_piece_bonus(game, case_id, data)
+        else:
+            game_events = process_puzzle(game, case_id, data)
+
+        trace = Trace()
+        trace.attributes["concept:name"] = f'case_{case_id}'
+        trace.attributes["puzzle_id"] = game.headers["PuzzleId"]
+        trace.attributes["rating_50"] = round(int(game.headers["Rating"]) / 50) * 50
+        trace.attributes["rating_100"] = round(int(game.headers["Rating"]) / 100) * 100
+        trace.attributes["rating_200"] = round(int(game.headers["Rating"]) / 200) * 200
+        trace.attributes["themes"] = game.headers["Themes"]
+        trace.attributes["game_url"] = game.headers["GameUrl"]
+
+        result = []
+
+        if position_tags:
+            for move_to_find, type_of_move in position_tags:
+                index = -1
+                for i, move in enumerate(game.mainline_moves()):
+                    if move == move_to_find:
+                        index = i
+                        break
+                if index != -1:
+                    result.append((index, type_of_move))
+
+        print(result)
+        end_index = 0
+        for i, event in enumerate(game_events, start=1):
+            if i % 2 == 0:
+                end_index = i
+                moves = [move for idx, move in result if idx == i-1]
+                if moves:
+                    for move in moves:
+                        if move:
+                            trace.append(Event({
+                                "concept:name": f"move: {i}, {move}",
+                                "time:timestamp": event["Timestamp"],
+                            }))
+            else:
+                trace.append(Event({
+                    "concept:name": f"state: {i}, {event["Activity"]}",
+                    # "concept:name": f"s: {event["Activity"]}",
+                    "time:timestamp": event["Timestamp"],
+                }))
+                end_index = i
+        end_index += 1
+        if end_index % 2 == 0:
+            moves = [move for idx, move in result if idx == end_index - 1]
+            if moves:
+                for move in moves:
+                    if move:
+                        trace.append(Event({
+                            "concept:name": f"move: {end_index}, {move}",
+
+                        }))
+        event_log.append(trace)
+
+        end = time.time()
+        print(f"Processed Game {case_id} in {end - start:.2f} seconds")
+        case_id += 1
+
+    xes_exporter.apply(event_log, output_path)
+
+def generate_puzzle_log(file_path = 'sample_puzzles.csv', existing_xes_path = None, without_piece_bonus = False):
+
+    puzzles = pd.read_csv(file_path)
+    game_objects = []
+    for _, row in puzzles.iterrows():
+        fen = row['FEN']
+        moves_str = row['Moves']
+        game = create_game_from_fen_and_moves(fen, moves_str)
+        game.headers["PuzzleId"] = row['PuzzleId']
+        game.headers["Rating"] = str(row['Rating'])
+        game.headers["Themes"] = row['Themes']
+        game.headers["GameUrl"] = row['GameUrl']
+        game_objects.append(game)
+
+    output_path = "event_log_" + file_path.replace(".csv", ".xes")
+    data = get_data_object()
+
+    if existing_xes_path is None:
+        print("No existing XES file path provided. Creating a new event log.")
+        event_log = EventLog()
+    else:
+        try:
+            event_log = xes_importer.apply(existing_xes_path)
+            print(f"Loaded existing event log with {len(event_log)} traces.")
+        except FileNotFoundError:
+            print(f"File {existing_xes_path} not found. Creating a new event log.")
+            event_log = EventLog()
+    case_id = len(event_log) + 1
+
+    for game in game_objects:
+        start = time.time()
+        if without_piece_bonus:
+            game_events = process_puzzle_without_piece_bonus(game, case_id, data)
+        else:
+            game_events = process_puzzle(game, case_id, data)
+
+
+        trace = Trace()
+        trace.attributes["concept:name"] = f'case_{case_id}'
+        trace.attributes["puzzle_id"] = game.headers["PuzzleId"]
+        trace.attributes["rating"] = game.headers["Rating"]
+        trace.attributes["themes"] = game.headers["Themes"]
+        trace.attributes["game_url"] = game.headers["GameUrl"]
+
+        for i, event in enumerate(game_events, start=1):
+            trace.append(Event({
+                "concept:name": f"{i}, {event["Activity"]}",
+                # "concept:name": f"{event["Activity"]}",
+                "time:timestamp": event["Timestamp"],
+            }))
+        event_log.append(trace)
+
+        end = time.time()
+        print(f"Processed Game {case_id} in {end - start:.2f} seconds")
+        case_id += 1
+
+    xes_exporter.apply(event_log, output_path)
+
+def generate_theme_log(input_csv = "puzzles_0_1400.csv"):
+
+    output_xes = "event_log_" + input_csv.replace(".csv", ".xes")
+
+    df = pd.read_csv(input_csv)
+
+    event_log = EventLog()
+
+    for _, row in df.iterrows():
+        puzzle_id = row['PuzzleId']
+        rating = row['Rating']
+        game_url = row['GameUrl']
+        themes = row['Themes'].split()
+
+        trace = Trace()
+        trace.attributes["puzzle_id"] = puzzle_id
+        trace.attributes["rating"] = rating
+        trace.attributes["game_url"] = game_url
+
+        for i, theme in enumerate(themes, start=1):
+            event = Event({
+                "concept:name": theme,
+                "time:timestamp": f"{datetime(i, 1, 1, 12, 0)}"
+            })
+            trace.append(event)
+
+        event_log.append(trace)
+    xes_exporter.apply(event_log, output_xes)
+    print(f"Event log saved to {output_xes}")
+
+
+def process_puzzle_without_piece_bonus(game, case_id, data):
+    print(f"Processing Game {case_id}")
+    current_board = game.board()
+    color = "black"
+    if not current_board.turn:
+        color = "white"
+    item_sums, group_list = get_item_sums_and_group_list_puzzle(game, current_board, data, color)
+    elem_list = [entry['elem'] for entry in group_list]
+
+    game_events = []
+
+    for i, item in enumerate(item_sums, start=1):
+        activity = max(
+            ((value, key) for value, key in zip(item, elem_list) if key not in {"piece_value_bonus", "psqt_bonus"}),
+            key=lambda x: x[0]
+        )
+        if color == "black":
+            activity = min(
+                ((value, key) for value, key in zip(item, elem_list) if key not in {"piece_value_bonus", "psqt_bonus"}),
+                key=lambda x: x[0]
+            )
+
+        activity_name = activity[1]
+        if activity[0] != 0:
+            game_events.append({
+                'Timestamp': f'{datetime(i, 1, 1, 12, 0)}',
+                'Activity': activity_name
+            })
+
+    return game_events
+
+def process_puzzle(game, case_id, data):
+    print(f"Processing Game {case_id}")
+    current_board = game.board()
+    color = "white"
+    if not current_board.turn:
+        color = "black"
+    item_sums, group_list = get_item_sums_and_group_list_puzzle(game, current_board, data, color)
+    elem_list = [entry['elem'] for entry in group_list]
+
+    game_events = []
+
+    for i, item in enumerate(item_sums, start=1):
+        item_dict = zip(item, elem_list)
+        activity = max(zip(item, elem_list), key=lambda x: x[0])
+        if color == "black":
+            activity = min(zip(item, elem_list), key=lambda x: x[0])
+
+        activity_name = activity[1]
+        if activity[0] != 0:
+            game_events.append({
+                'Timestamp': f'{datetime(i, 1, 1, 12, 0)}',
+                'Activity': activity_name
+            })
+
+    return game_events
+
+def create_game_from_fen_and_moves(fen, moves_str):
+    board = chess.Board(fen)
+    moves = moves_str.split()
+
+    game = chess.pgn.Game()
+    game.setup(board)
+    node = game
+
+    for move in moves:
+        move_obj = board.parse_san(move)
+        node = node.add_variation(move_obj)
+        board.push(move_obj)
+
+    return game
 
 def get_games_of_player(player_name: str = "hikaru", year: str = "2018", month: str = "01", output_file: str = "games.pgn"):
     chess_api = ChessAPI(player_name, year, month)
@@ -53,6 +320,24 @@ def get_games_of_player(player_name: str = "hikaru", year: str = "2018", month: 
         except IOError as e:
             print(f"Error saving games to file: {e}")
 
+def extract_sample_from_csv():
+    input_file = 'lichess_db_puzzle.csv.zst'
+    output_file = 'lichess_db_puzzle.csv'
+
+    with open(input_file, 'rb') as f_in, open(output_file, 'wb') as f_out:
+        dctx = zstd.ZstdDecompressor()
+        with dctx.stream_reader(f_in) as reader:
+            while True:
+                chunk = reader.read(16384)
+                if not chunk:
+                    break
+                f_out.write(chunk)
+
+    df = pd.read_csv(output_file)
+
+    sample = df.iloc[5000:6000]
+
+    sample.to_csv('sample_puzzles_1000_after_5000.csv', index=False)
 
 def process_game(game, case_id, data, playername: str):
     # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
@@ -234,6 +519,31 @@ def debug_at_move(game, current_board, engine, move_num) -> None:
     info = engine.analyse(current_board, chess.engine.Limit(depth=20))
     print(f"Engine score: {info['score'].white()}")
 
+def get_item_sums_and_group_list_puzzle(game, current_board, data, color):
+    # all_groups = []
+    item_sums = []
+    recent_items = []
+    item_length = 50
+    group_list = []
+    remainder = 0
+    if color == "white":
+        remainder = 1
+    for move_num, move in enumerate(list(game.mainline_moves())[:-1], start=1):
+        current_board.push(move)
+
+
+        group_list = get_group_list(board_to_position(current_board), data)
+        # all_groups.append(group_list)
+        item_third_elements = [{group['elem']: group['item'][2]} for group in group_list]
+        recent_items.append(item_third_elements)
+        item_length = len(item_third_elements)
+
+        # if move_num % 4 == 0:
+        add_items(item_length, item_sums, recent_items)
+
+    # add_items(item_length, item_sums, recent_items)
+
+    return item_sums, group_list
 
 def get_item_sums_and_group_list(game, current_board, data, color):
     # all_groups = []
@@ -319,8 +629,81 @@ def run_and_evaluate_game_sf(game, current_board, engine, depth) -> list[tuple[i
 
     return largest_changes
 
+def add_move_to_activities(existing_xes_path = None):
+    event_log = xes_importer.apply(existing_xes_path)
 
-def generate_event_log(pgn_path = "Games/filtered_games.pgn", player_name: str = None, existing_xes_path = None):
+    for i, trace in enumerate(event_log, start=1):
+        print(f"Processing trace {i}")
+        for event in trace:
+            # Extract the timestamp and derive the move number
+            timestamp = event.get("time:timestamp")
+            if timestamp:
+                move_number = int(timestamp.split("-")[0])
+                event_name = event["concept:name"]
+                event["concept:name"] = f"{move_number}, {event_name}"
+
+    modified_xes_path = "event_log_Hikaru_games_2024_01.xes"
+    xes_exporter.apply(event_log, modified_xes_path)
+
+    print("Event log has been updated and saved.")
+
+
+def process_game_without_piece_bonus(game, case_id, data, playername: str):
+    # print(f"Processing Game {game.headers['Event']}, White: {game.headers['White']}, Black {game.headers['Black']}")
+    result = game.headers['Result']
+    ending = None
+    if result == '1-0':
+        outcome = 'White won'
+    elif result == '0-1':
+        outcome = 'Black won'
+    else:
+        outcome = 'Draw'
+    print(f"Processing Game {case_id}")
+    current_board = game.board()
+    color = "white"
+    if game.headers["Black"] == playername:
+        color = "black"
+    item_sums, group_list = get_item_sums_and_group_list_puzzle(game, current_board, data, color)
+    elem_list = [entry['elem'] for entry in group_list]
+
+    game_events = []
+
+    for i, item in enumerate(item_sums, start=1):
+        prev = (i - 1) * 4
+        cur = i * 4
+        largest_three = sorted(zip(item, elem_list), reverse=True)[:3]
+
+        activity = max(
+            ((value, key) for value, key in zip(item, elem_list) if key not in {"piece_value_bonus", "psqt_bonus"}),
+            key=lambda x: x[0]
+        )
+        if color == "black":
+            activity = min(
+                ((value, key) for value, key in zip(item, elem_list) if key not in {"piece_value_bonus", "psqt_bonus"}),
+                key=lambda x: x[0]
+            )
+
+        # activities = ", ".join([biggest[1] for biggest in largest_three])
+        activity_name = activity[1]
+        if activity[0] != 0:
+            game_events.append({
+                # 'Case ID': f'case_{case_id}',
+                # 'Timestamp': f'move_{prev}-{cur}',
+                # 'Activity': activities
+                # 'Timestamp': f'move_{i}',
+                'Timestamp': f'{datetime(i, 1, 1, 12, 0)}',
+                'Activity': activity_name
+            })
+    if outcome != 'Draw':
+        if current_board.is_checkmate():
+            ending = "Checkmate"
+        else:
+            ending = "Time/Forfeit"
+
+    return outcome, ending, game_events
+
+
+def generate_event_log(pgn_path = "Games/filtered_games.pgn", player_name: str = None, existing_xes_path = None, without_piece_bonus = False):
     output_path = "event_log_" + pgn_path[pgn_path.find("/") + 1:].replace(".pgn", ".xes")
     data = get_data_object()
 
@@ -345,7 +728,11 @@ def generate_event_log(pgn_path = "Games/filtered_games.pgn", player_name: str =
                 break
 
             start = time.time()
-            outcome, ending, game_events = process_game(game, case_id, data, player_name)
+            if without_piece_bonus:
+                outcome, ending, game_events = process_game_without_piece_bonus(game, case_id, data, player_name)
+            else:
+                outcome, ending, game_events = process_game(game, case_id, data, player_name)
+
 
             trace = Trace()
             trace.attributes["concept:name"] = f'case_{case_id}'
@@ -356,9 +743,9 @@ def generate_event_log(pgn_path = "Games/filtered_games.pgn", player_name: str =
                 trace.attributes["player_color"] = "White"
             elif game.headers["Black"] and game.headers["Black"] == player_name:
                 trace.attributes["player_color"] = "Black"
-            for event in game_events:
+            for i, event in enumerate(game_events, start=1):
                 trace.append(Event({
-                    "concept:name": event["Activity"],
+                    "concept:name": f"{i}, {event["Activity"]}",
                     "time:timestamp": event["Timestamp"],
                     # "case:concept:name": event["Case ID"]
                 }))
@@ -391,6 +778,28 @@ def print_largest_changes():
 def get_engine():
     return chess.engine.SimpleEngine.popen_uci(
         r"C:\Users\carlj\Documents\stockfish\stockfish\stockfish-windows-x86-64-avx2.exe")
+
+
+def split_csv_in_rating(input_file = "sample_puzzles.csv"):
+
+    output_file_1 = input_file.replace(".csv", "") + "_0_1400.csv"
+    output_file_2 = input_file.replace(".csv", "") + "_1400_2000.csv"
+    output_file_3 = input_file.replace(".csv", "") + "_2000_plus.csv"
+
+    df = pd.read_csv(input_file)
+
+    puzzles_0_1400 = df[(df['Rating'] >= 0) & (df['Rating'] < 1400)]
+    puzzles_1400_2000 = df[(df['Rating'] >= 1400) & (df['Rating'] <= 2000)]
+    puzzles_2000_plus = df[df['Rating'] > 2000]
+
+    puzzles_0_1400.to_csv(output_file_1, index=False)
+    puzzles_1400_2000.to_csv(output_file_2, index=False)
+    puzzles_2000_plus.to_csv(output_file_3, index=False)
+
+    print("Puzzles sorted and saved into three separate files:")
+    print(f"- {output_file_1}")
+    print(f"- {output_file_2}")
+    print(f"- {output_file_3}")
 
 
 def inductive_mine_log():
