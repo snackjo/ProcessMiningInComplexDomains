@@ -42,15 +42,8 @@ Each function will create an event log (xes file) in the root directory. The eve
 ## Authors
 
 Carl Jackson 
+
 carlj0908@gmail.com
-
-## Version History
-
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
 
 ## License
 
