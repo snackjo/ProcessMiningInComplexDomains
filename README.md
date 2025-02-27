@@ -27,7 +27,7 @@ The input data is chess games in the form of PGN files or chess puzzles from the
 
 ### Installing
 
-* Update path in get_engine() to your engine version
+* Update path in get_engine() to your engine path
 * Download game or puzzle data from the [Lichess Database](https://database.lichess.org/)
 
 ### Executing program
