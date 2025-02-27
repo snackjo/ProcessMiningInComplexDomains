@@ -37,21 +37,20 @@ Depending on the use case, from main.py run
 2. ```generate_coarse_event_log_xes(pgn_path="Games/2014-March.pgn")```
 3. ```generate_puzzle_move_log(file_path="0_120000_puzzles.csv", existing_xes_path=None, elo_limit=2400)```
 
-Each function will create an event log (xes file) in the root directory. The event logs can be analysed using other tools such as [Disco](https://fluxicon.com/disco/) or [ProM](https://promtools.org/)
+Each function will create an event log (xes file) in the root directory. The event logs can be analysed using other tools such as [Disco](https://fluxicon.com/disco/) or [ProM](https://promtools.org/).
 
 ## Authors
 
-Carl Jackson 
-
+Carl Jackson  
 carlj0908@gmail.com
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-[Stockfish Evaluation Guide](https://hxim.github.io/Stockfish-Evaluation-Guide/)
-[lichess-puzzler](https://github.com/ornicar/lichess-puzzler)
-[Technical University of Denmark](https://www.dtu.dk/english/)
-[Humboldt University of Berlin](https://www.hu-berlin.de/en)
+[Stockfish Evaluation Guide](https://hxim.github.io/Stockfish-Evaluation-Guide/)  
+[lichess-puzzler](https://github.com/ornicar/lichess-puzzler)  
+[Technical University of Denmark](https://www.dtu.dk/english/)  
+[Humboldt University of Berlin](https://www.hu-berlin.de/en)  
