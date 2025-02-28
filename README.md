@@ -29,6 +29,7 @@ The input data is chess games in the form of PGN files or chess puzzles from the
 
 * Update path in get_engine() to your engine path
 * Download game or puzzle data from the [Lichess Database](https://database.lichess.org/)
+* If puzzle data is needed, use the function ```extract_sample_from_csv(start=0, end=10000)``` to extract the first 10000 puzzles
 
 ### Executing program
 
