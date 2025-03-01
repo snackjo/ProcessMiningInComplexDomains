@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<log xes.version="1849-2016" xes.features="nested-attributes" xmlns="http://www.xes-standard.org/">
+	<trace>
+		<string key="concept:name" value="case_1" />
+		<string key="puzzle_id" value="1gq67" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/R0qRrfSe#49" />
+		<event>
+			<string key="concept:name" value="state: 1, shelter_storm" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, imbalance" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_2" />
+		<string key="puzzle_id" value="1gsaF" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage defensiveMove intermezzo middlegame short" />
+		<string key="game_url" value="https://lichess.org/KAhAmC9S#57" />
+		<event>
+			<string key="concept:name" value="state: 1, threat_safe_pawn" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, threat_safe_pawn" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, intermezzo" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_3" />
+		<string key="puzzle_id" value="1hFbD" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn crushing defensiveMove endgame promotion queenEndgame short" />
+		<string key="game_url" value="https://lichess.org/9opx7Dcp/black#90" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, promotion" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, mobility_bonus" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_4" />
+		<string key="puzzle_id" value="1hd2b" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing fork middlegame short" />
+		<string key="game_url" value="https://lichess.org/SY5JSMSJ/black#36" />
+		<event>
+			<string key="concept:name" value="state: 1, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, hanging" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_5" />
+		<string key="puzzle_id" value="1heUf" />
+		<int key="rating_50" value="2800" />
+		<int key="rating_100" value="2800" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="crushing endgame quietMove rookEndgame short" />
+		<string key="game_url" value="https://lichess.org/S5Kyxiaa/black#102" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_6" />
+		<string key="puzzle_id" value="1hqm5" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/Z9jztVnb/black#62" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_7" />
+		<string key="puzzle_id" value="1iL44" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing defensiveMove master middlegame short" />
+		<string key="game_url" value="https://lichess.org/mcn4fvej/black#52" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_8" />
+		<string key="puzzle_id" value="1iNhP" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing middlegame quietMove short" />
+		<string key="game_url" value="https://lichess.org/PPDNwiF9#29" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_9" />
+		<string key="puzzle_id" value="1io21" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage middlegame quietMove short" />
+		<string key="game_url" value="https://lichess.org/E5spOFBP/black#42" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_10" />
+		<string key="puzzle_id" value="1j1Vd" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage defensiveMove endgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/oiU76fjd/black#78" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_11" />
+		<string key="puzzle_id" value="1j61x" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing master masterVsMaster middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/QPCylvV3#63" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_12" />
+		<string key="puzzle_id" value="1jinP" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing endgame pawnEndgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/PxfyjgMb/black#84" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_13" />
+		<string key="puzzle_id" value="1kAnl" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing endgame long quietMove sacrifice" />
+		<string key="game_url" value="https://lichess.org/RQHXelm2/black#68" />
+		<event>
+			<string key="concept:name" value="state: 1, shelter_strength" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, shelter_strength" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, shelter_strength" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_14" />
+		<string key="puzzle_id" value="1kqZ5" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="attraction capturingDefender crushing deflection long middlegame" />
+		<string key="game_url" value="https://lichess.org/CzvH14Hn#49" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, capturingDefender" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, deflection" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_15" />
+		<string key="puzzle_id" value="1l1RJ" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing middlegame quietMove short" />
+		<string key="game_url" value="https://lichess.org/v53Eoog3#41" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_16" />
+		<string key="puzzle_id" value="1l5fr" />
+		<int key="rating_50" value="2750" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="crushing defensiveMove endgame long pin quietMove" />
+		<string key="game_url" value="https://lichess.org/HNsoEkOP/black#60" />
+		<event>
+			<string key="concept:name" value="state: 1, doubled" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, pin" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_17" />
+		<string key="puzzle_id" value="1lESA" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage fork middlegame short" />
+		<string key="game_url" value="https://lichess.org/GTKH7ino#23" />
+		<event>
+			<string key="concept:name" value="state: 1, hanging" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, trapped_rook" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_18" />
+		<string key="puzzle_id" value="1lKTN" />
+		<int key="rating_50" value="2650" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn crushing defensiveMove endgame long promotion rookEndgame" />
+		<string key="game_url" value="https://lichess.org/Jm0yYzMU#111" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, advancedPawn" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, promotion" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_19" />
+		<string key="puzzle_id" value="1lNao" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn advantage discoveredAttack endgame exposedKing fork master promotion veryLong" />
+		<string key="game_url" value="https://lichess.org/eoweralJ#97" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, discoveredAttack" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, promotion" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:06:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 7, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:07:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_20" />
+		<string key="puzzle_id" value="1lPgd" />
+		<int key="rating_50" value="2600" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing fork intermezzo middlegame short" />
+		<string key="game_url" value="https://lichess.org/7cKO2Fa0/black#50" />
+		<event>
+			<string key="concept:name" value="state: 1, threat_safe_pawn" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, threat_safe_pawn" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, intermezzo" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_21" />
+		<string key="puzzle_id" value="1lVkI" />
+		<int key="rating_50" value="2650" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="attackingF2F7 attraction crushing deflection long opening sacrifice" />
+		<string key="game_url" value="https://lichess.org/keULhuf1/black#24" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, deflection" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_22" />
+		<string key="puzzle_id" value="1lgRq" />
+		<int key="rating_50" value="2650" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage attraction endgame master short" />
+		<string key="game_url" value="https://lichess.org/96voIoYL#77" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_23" />
+		<string key="puzzle_id" value="1liQJ" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn crushing endgame pin short" />
+		<string key="game_url" value="https://lichess.org/7AIS0TOX#69" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, advancedPawn" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_24" />
+		<string key="puzzle_id" value="1lmwY" />
+		<int key="rating_50" value="2850" />
+		<int key="rating_100" value="2900" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="advantage discoveredAttack endgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/ScWw46dV#61" />
+		<event>
+			<string key="concept:name" value="state: 1, flank_attack" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, discoveredAttack" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_25" />
+		<string key="puzzle_id" value="1lzVN" />
+		<int key="rating_50" value="2800" />
+		<int key="rating_100" value="2800" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="crushing defensiveMove long middlegame sacrifice" />
+		<string key="game_url" value="https://lichess.org/CZMeiGri#45" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, shelter_strength" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_26" />
+		<string key="puzzle_id" value="1m9DX" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advancedPawn crushing defensiveMove deflection endgame master pin veryLong" />
+		<string key="game_url" value="https://lichess.org/NTMPMx0D/black#124" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, advancedPawn" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, deflection" />
+			<string key="time:timestamp" value="2024-01-01 12:06:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 7, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:07:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_27" />
+		<string key="puzzle_id" value="1mb5Q" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="attraction crushing doubleCheck fork middlegame sacrifice veryLong" />
+		<string key="game_url" value="https://lichess.org/RqNRvptZ/black#52" />
+		<event>
+			<string key="concept:name" value="state: 1, imbalance" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:06:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 7, imbalance" />
+			<string key="time:timestamp" value="2024-01-01 12:07:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 8, doubleCheck" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_28" />
+		<string key="puzzle_id" value="1n5KP" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage discoveredAttack fork middlegame short" />
+		<string key="game_url" value="https://lichess.org/MYbIZChb/black#66" />
+		<event>
+			<string key="concept:name" value="state: 1, pawn_push_threat" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, discoveredAttack" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_29" />
+		<string key="puzzle_id" value="1n6M6" />
+		<int key="rating_50" value="2750" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="clearance crushing defensiveMove endgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/wis9oz5P/black#102" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_30" />
+		<string key="puzzle_id" value="1ndsb" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing endgame quietMove rookEndgame short" />
+		<string key="game_url" value="https://lichess.org/yJGEC0ob/black#120" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_31" />
+		<string key="puzzle_id" value="1nfe1" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing defensiveMove endgame queenEndgame short" />
+		<string key="game_url" value="https://lichess.org/PQB8XTRP/black#90" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_32" />
+		<string key="puzzle_id" value="1nnhH" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing defensiveMove endgame pawnEndgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/wVZCHaQC/black#66" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_33" />
+		<string key="puzzle_id" value="1oYq1" />
+		<int key="rating_50" value="2600" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage discoveredAttack middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/vQ0rse0c#37" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, discoveredAttack" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_34" />
+		<string key="puzzle_id" value="1oeVH" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing fork long middlegame sacrifice" />
+		<string key="game_url" value="https://lichess.org/bPJ3Y967/black#38" />
+		<event>
+			<string key="concept:name" value="state: 1, shelter_storm" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, shelter_storm" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, shelter_storm" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_35" />
+		<string key="puzzle_id" value="1pEow" />
+		<int key="rating_50" value="2600" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="clearance crushing defensiveMove exposedKing long middlegame" />
+		<string key="game_url" value="https://lichess.org/GYaXalWR/black#46" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, shelter_strength" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, clearance" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, mobility_bonus" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_36" />
+		<string key="puzzle_id" value="1pTJp" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="bishopEndgame crushing endgame master quietMove short" />
+		<string key="game_url" value="https://lichess.org/q5rbge9z#77" />
+		<event>
+			<string key="concept:name" value="state: 1, king_proximity" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, connected" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_37" />
+		<string key="puzzle_id" value="1pZxE" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing exposedKing fork long middlegame" />
+		<string key="game_url" value="https://lichess.org/7N5t6CFu/black#44" />
+		<event>
+			<string key="concept:name" value="state: 1, hanging" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, exposedKing" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_38" />
+		<string key="puzzle_id" value="1pazq" />
+		<int key="rating_50" value="2600" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="middlegame" />
+		<string key="game_url" value="https://lichess.org/Ltx0CQjC/black#60" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, exposedKing" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, discoveredAttack" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_39" />
+		<string key="puzzle_id" value="1pv4Z" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage fork master middlegame short" />
+		<string key="game_url" value="https://lichess.org/06fHC2QP#41" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_40" />
+		<string key="puzzle_id" value="1qAlb" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing defensiveMove endgame queenRookEndgame short" />
+		<string key="game_url" value="https://lichess.org/wx0Iw9hy/black#124" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_41" />
+		<string key="puzzle_id" value="1qKEQ" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="crushing endgame master quietMove rookEndgame short" />
+		<string key="game_url" value="https://lichess.org/AVvOaVoq/black#56" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_42" />
+		<string key="puzzle_id" value="1qKL3" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="master middlegame" />
+		<string key="game_url" value="https://lichess.org/Lc54yydV/black#46" />
+		<event>
+			<string key="concept:name" value="state: 1, minor_threat" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, minor_threat" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_43" />
+		<string key="puzzle_id" value="1qZjS" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing discoveredAttack fork master middlegame short" />
+		<string key="game_url" value="https://lichess.org/FsKXi1ZU#27" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, discoveredAttack" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_44" />
+		<string key="puzzle_id" value="1qzc5" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/t9c7USoz/black#42" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_45" />
+		<string key="puzzle_id" value="1rNul" />
+		<int key="rating_50" value="2800" />
+		<int key="rating_100" value="2800" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="advancedPawn crushing defensiveMove endgame long rookEndgame" />
+		<string key="game_url" value="https://lichess.org/AWWU3b6S/black#108" />
+		<event>
+			<string key="concept:name" value="state: 1, tempo" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, advancedPawn" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_46" />
+		<string key="puzzle_id" value="1rWJ9" />
+		<int key="rating_50" value="2450" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage exposedKing long middlegame pin quietMove" />
+		<string key="game_url" value="https://lichess.org/1QQcDrDk/black#48" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, exposedKing" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, pin" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_47" />
+		<string key="puzzle_id" value="1rbd5" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="endgame exposedKing long mate mateIn3 quietMove" />
+		<string key="game_url" value="https://lichess.org/80o988hT#65" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, exposedKing" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_48" />
+		<string key="puzzle_id" value="1resf" />
+		<int key="rating_50" value="2400" />
+		<int key="rating_100" value="2400" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="advantage middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/ikDtwJxT/black#68" />
+		<event>
+			<string key="concept:name" value="state: 1, mobility_bonus" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, minor_threat" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_49" />
+		<string key="puzzle_id" value="1rjDY" />
+		<int key="rating_50" value="2700" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn advantage clearance endgame pin veryLong" />
+		<string key="game_url" value="https://lichess.org/ljsSmNmT#47" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, advancedPawn" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, clearance" />
+			<string key="time:timestamp" value="2024-01-01 12:06:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 7, passed_rank" />
+			<string key="time:timestamp" value="2024-01-01 12:07:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_50" />
+		<string key="puzzle_id" value="1rld0" />
+		<int key="rating_50" value="2600" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing endgame fork short" />
+		<string key="game_url" value="https://lichess.org/2YYq1puy#71" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_51" />
+		<string key="puzzle_id" value="1roGM" />
+		<int key="rating_50" value="2550" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn crushing endgame quietMove rookEndgame short" />
+		<string key="game_url" value="https://lichess.org/dPRGaWlz/black#114" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, advancedPawn" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_52" />
+		<string key="puzzle_id" value="1s2yi" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing defensiveMove master middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/Okcto37n/black#74" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_53" />
+		<string key="puzzle_id" value="1sJHW" />
+		<int key="rating_50" value="2900" />
+		<int key="rating_100" value="2900" />
+		<int key="rating_200" value="3000" />
+		<string key="themes" value="crushing endgame fork short" />
+		<string key="game_url" value="https://lichess.org/jjSYT2NO/black#136" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, tempo" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_54" />
+		<string key="puzzle_id" value="1sLhn" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="crushing defensiveMove discoveredAttack endgame short" />
+		<string key="game_url" value="https://lichess.org/cembfND0/black#80" />
+		<event>
+			<string key="concept:name" value="state: 1, hanging" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, discoveredAttack" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, defensiveMove" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_55" />
+		<string key="puzzle_id" value="1sbpa" />
+		<int key="rating_50" value="2800" />
+		<int key="rating_100" value="2800" />
+		<int key="rating_200" value="2800" />
+		<string key="themes" value="crushing exposedKing long middlegame pin" />
+		<string key="game_url" value="https://lichess.org/Ej5sFup6/black#48" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, exposedKing" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_56" />
+		<string key="puzzle_id" value="1sylw" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="crushing middlegame pin short" />
+		<string key="game_url" value="https://lichess.org/BQOzmZ55/black#62" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, pin" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_57" />
+		<string key="puzzle_id" value="1t222" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="attraction crushing master middlegame short" />
+		<string key="game_url" value="https://lichess.org/6GpduSsM/black#62" />
+		<event>
+			<string key="concept:name" value="state: 1, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, slider_on_queen" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_58" />
+		<string key="puzzle_id" value="1tFac" />
+		<int key="rating_50" value="2650" />
+		<int key="rating_100" value="2700" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advancedPawn crushing endgame queenEndgame quietMove short" />
+		<string key="game_url" value="https://lichess.org/AYWzRenx/black#80" />
+		<event>
+			<string key="concept:name" value="state: 1, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, passed_block" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, advancedPawn" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_59" />
+		<string key="puzzle_id" value="1tXVj" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="attraction crushing long middlegame sacrifice" />
+		<string key="game_url" value="https://lichess.org/VH3L5wGU/black#48" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_60" />
+		<string key="puzzle_id" value="1tXkV" />
+		<int key="rating_50" value="2500" />
+		<int key="rating_100" value="2500" />
+		<int key="rating_200" value="2400" />
+		<string key="themes" value="attraction clearance long mate mateIn3 middlegame sacrifice" />
+		<string key="game_url" value="https://lichess.org/QEYhEnQs#27" />
+		<event>
+			<string key="concept:name" value="state: 1, trapped_rook" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, attraction" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, trapped_rook" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, clearance" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="case_61" />
+		<string key="puzzle_id" value="1th4J" />
+		<int key="rating_50" value="2650" />
+		<int key="rating_100" value="2600" />
+		<int key="rating_200" value="2600" />
+		<string key="themes" value="advantage fork middlegame quietMove sacrifice veryLong" />
+		<string key="game_url" value="https://lichess.org/PMMeu6Lw/black#38" />
+		<event>
+			<string key="concept:name" value="state: 1, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:01:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 2, quietMove" />
+			<string key="time:timestamp" value="2024-01-01 12:02:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 3, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:03:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 4, fork" />
+			<string key="time:timestamp" value="2024-01-01 12:04:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 5, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:05:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="move: 6, sacrifice" />
+			<string key="time:timestamp" value="2024-01-01 12:06:00" />
+		</event>
+		<event>
+			<string key="concept:name" value="state: 7, king_danger" />
+			<string key="time:timestamp" value="2024-01-01 12:07:00" />
+		</event>
+	</trace>
+</log>
